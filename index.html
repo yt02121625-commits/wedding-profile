@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wedding Profile | YUICHI & YUMA</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Great+Vibes&family=Shippori+Mincho:wght@400;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        /* --- Base Design (共通設定) --- */
+        :root {
+            --bg-color: #f4f4f8; 
+            --text-main: #333333;
+            --text-gray: #888888;
+            --accent-gold: #C5A059;
+            --font-en: 'Cormorant Garamond', serif;
+            --font-script: 'Great Vibes', cursive;
+            --font-jp: 'Shippori Mincho', serif;
+            --font-body: 'Zen Kaku Gothic New', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            line-height: 1.8;
+            letter-spacing: 0.05em;
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        /* 背景の花柄 */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1596395719912-70659630c82f?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.04;
+            z-index: -2;
+            filter: grayscale(100%) contrast(120%);
+            pointer-events: none;
+        }
+
+        /* --- 桜のアニメーション用スタイル --- */
+        #sakura-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .sakura-petal {
+            position: absolute;
+            top: -50px;
+            background-color: #ffd1dc;
+            width: 12px; height: 18px;
+            border-radius: 15px 0px 15px 0px;
+            opacity: 0.7;
+        }
+
+        /* --- タイトル & コンテンツ (初期状態) --- */
+        h2 {
+            font-family: var(--font-en);
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--accent-gold);
+            font-weight: 400;
+            opacity: 0; /* JSで表示 */
+            visibility: hidden;
+        }
+        
+        .jp-sub {
+            display: block; font-family: var(--font-jp); font-size: 0.85rem;
+            color: var(--text-gray); margin-top: 5px; letter-spacing: 0.15em;
+        }
+
+        section { padding: 80px 20px; max-width: 900px; margin: 0 auto; position: relative; }
+        img { width: 100%; height: auto; display: block; object-fit: cover; }
+
+        /* コンテンツ部分の初期非表示クラス */
+        .content-hidden {
+            opacity: 0;
+            transform: translateY(30px);
+            visibility: hidden;
+        }
+
+        /* =========================================
+           PART 1: Top ~ Timeline
+           ========================================= */
+
+        /* --- Hero Slideshow --- */
+        .hero {
+            height: 100vh; position: relative; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .hero-slide {
+            position: absolute; inset: 0;
+            background-size: cover; background-position: center;
+            opacity: 0; animation: slideShow 18s infinite;
+        }
+        .slide-1 { background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200'); animation-delay: 0s; }
+        .slide-2 { background-image: url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=1200'); animation-delay: 6s; }
+        .slide-3 { background-image: url('https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=1200'); animation-delay: 12s; }
+
+        @keyframes slideShow {
+            0% { opacity: 0; transform: scale(1.05); }
+            5% { opacity: 1; }
+            33% { opacity: 1; }
+            38% { opacity: 0; transform: scale(1.0); }
+            100% { opacity: 0; }
+        }
+
+        .hero-overlay {
+            position: absolute; inset: 0; background: rgba(255,255,255,0.4); z-index: 1;
+        }
+        .hero-content {
+            position: relative; z-index: 2; text-align: center;
+            padding: 0 20px;
+            width: 100%;
+        }
+        
+        .hero-title-svg {
+            width: 100%; height: 100px; display: block; margin: 10px auto; overflow: visible;
+        }
+        .hero-title-text {
+            font-family: var(--font-script); font-size: 3.8rem; text-anchor: middle; dominant-baseline: middle;
+            fill: rgba(68, 68, 68, 0); stroke: #444; stroke-width: 1px; stroke-dasharray: 2000; stroke-dashoffset: 2000;
+        }
+        
+        .hero-subtitle {
+            font-family: var(--font-en); font-size: 1.2rem; letter-spacing: 0.1em;
+            color: #555; display: block; margin-bottom: 10px; opacity: 0;
+        }
+        .hero-date { 
+            font-family: var(--font-en); font-size: 1.1rem; letter-spacing: 0.3em; 
+            color: #666; opacity: 0;
+        }
+
+        /* --- Greeting --- */
+        .greeting-layout { display: flex; flex-direction: column; align-items: center; gap: 40px; }
+        .greeting-img-row { display: flex; justify-content: center; gap: 20px; width: 100%; max-width: 600px; }
+        .greeting-photo { width: 45%; border-radius: 2px; box-shadow: 10px 10px 0 rgba(197, 160, 89, 0.2); }
+        .greeting-text { font-family: var(--font-jp); text-align: center; line-height: 2.4; }
+
+        /* --- Timeline --- */
+        .timeline-container { position: relative; padding: 40px 0; }
+        .timeline-line {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 1px; height: 0%; background: var(--accent-gold); z-index: 0;
+        }
+        .timeline-row {
+            position: relative; z-index: 1; margin-bottom: 60px;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+        .t-icon {
+            font-size: 2.5rem; color: var(--accent-gold); background: var(--bg-color);
+            padding: 10px; margin-bottom: 15px;
+        }
+        .t-time { font-family: var(--font-en); font-size: 1.2rem; font-weight: bold; color: var(--text-gray); }
+        .t-title { font-family: var(--font-jp); font-size: 1.1rem; font-weight: 500; margin: 5px 0; }
+        .atmosphere-img {
+            width: 150px; height: 150px; object-fit: cover; border-radius: 50%;
+            margin: 20px auto; border: 1px solid #eee; padding: 5px; background: #fff;
+        }
+/* --- Menu --- */
+        .menu-container {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 50px 30px;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+        }
+        .menu-item {
+            margin-bottom: 30px;
+        }
+        .menu-item:last-child {
+            margin-bottom: 0;
+        }
+        .menu-title {
+            font-family: var(--font-en);
+            color: var(--accent-gold);
+            font-size: 1.3rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+        .menu-desc {
+            font-family: var(--font-jp);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+        /* =========================================
+           PART 2: Profile ~ End
+           ========================================= */
+
+        /* --- Profile --- */
+        .profile-container { display: flex; flex-direction: column; gap: 60px; max-width: 800px; margin: 0 auto; }
+        .profile-card { text-align: center; }
+        
+        .p-content-wrap {
+            display: flex; flex-direction: column; align-items: center;
+            margin-bottom: 20px;
+        }
+        .p-label {
+            font-family: var(--font-en); font-size: 1.3rem; color: var(--accent-gold);
+            letter-spacing: 0.1em; margin-bottom: 15px; font-weight: 600;
+        }
+        .p-photo { 
+            width: 200px; height: 200px; object-fit: cover; border-radius: 50%;
+            border: 1px solid #eee; padding: 5px; background: #fff;
+            margin-bottom: 15px;
+        }
+        .p-name {
+            font-family: var(--font-en); font-size: 1.5rem; letter-spacing: 0.1em;
+            color: var(--text-main); font-weight: 500;
+        }
+
+        .p-table {
+            width: 100%; max-width: 400px; margin: 10px auto 0;
+            font-size: 0.9rem; text-align: left; border-collapse: collapse;
+        }
+        .p-table th { color: #999; font-weight: normal; padding: 8px 0; width: 30%; border-bottom: 1px solid #eee; }
+        .p-table td { padding: 8px 0; border-bottom: 1px solid #eee; }
+
+        /* --- Q&A (Revised) --- */
+        .qa-section { padding: 20px 0; margin-top: 20px; }
+        
+        .qa-item { 
+            margin-bottom: 70px; /* Qごとの間隔を広めに */
+            text-align: center; 
+        }
+        
+        /* 質問 */
+        .qa-q {
+            font-family: var(--font-en); color: var(--accent-gold); font-size: 1.15rem;
+            display: inline-block; margin-bottom: 30px; /* QとAの間隔（視覚的な間） */
+            letter-spacing: 0.05em;
+            position: relative;
+        }
+        .qa-q::after {
+            content: ''; display: block; width: 30px; height: 1px; background: var(--accent-gold);
+            margin: 8px auto 0;
+        }
+
+        /* 回答エリア */
+        .qa-a-box { 
+            background: transparent; padding: 0 10px;
+            max-width: 600px; margin: 0 auto;
+            text-align: left; /* 読みやすくするため左寄せベース */
+        }
+        
+        .qa-row {
+            margin-bottom: 25px; /* YuichiとYumaの間隔 */
+        }
+
+        .qa-name { 
+            font-size: 0.8rem; color: #bbb; 
+            font-family: var(--font-en); letter-spacing: 0.1em;
+            margin-right: 8px; display: inline-block;
+        }
+        .qa-text { 
+            font-size: 0.95rem; line-height: 1.8; color: #444; 
+            display: inline;
+        }
+
+        /* アニメーション用クラス（JSで制御） */
+        .qa-anim-q, .qa-anim-a {
+            opacity: 0;
+            transform: translateY(20px);
+            visibility: hidden;
+        }
+
+        .qa-images-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 40px; }
+        .qa-grid-img { border-radius: 4px; height: 160px; object-fit: cover; width: 100%; filter: sepia(10%); }
+
+        /* --- Gallery --- */
+        .gallery-wrap { width: 100%; overflow: hidden; padding: 40px 0; background: transparent; }
+        .marquee-wrapper { display: flex; width: fit-content; }
+        
+        .gallery-card { width: 260px; margin-right: 25px; flex-shrink: 0; cursor: pointer; }
+        .g-img-box {
+            width: 100%; height: 180px; overflow: hidden; border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 12px;
+        }
+        .g-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .gallery-card:hover .g-img { transform: scale(1.1); }
+        
+        .g-caption { text-align: left; padding: 0 5px; }
+        .g-year { font-family: var(--font-en); color: var(--accent-gold); font-size: 1.1rem; display: block; }
+        .g-text { font-size: 0.85rem; color: #666; line-height: 1.5; }
+
+        /* --- Footer & Modal --- */
+        footer { text-align:center; padding:80px 20px 50px; color:#aaa; font-size:0.8rem; background:transparent; font-family:var(--font-en); }
+
+        #modal {
+            position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 9999;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s; padding: 20px;
+        }
+        #modal.active { display: flex; opacity: 1; }
+        .modal-img { max-width: 100%; max-height: 50vh; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .modal-content { max-width: 500px; text-align: center; margin-top: 20px; }
+        .close-btn { position: absolute; top: 30px; right: 30px; font-size: 2rem; color: #333; cursor: pointer; }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-pattern"></div>
+    <div id="sakura-container"></div>
+
+    <div class="hero">
+        <div class="hero-slide slide-1"></div>
+        <div class="hero-slide slide-2"></div>
+        <div class="hero-slide slide-3"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-subtitle anim-item">Wedding Profile</span>
+            <svg class="hero-title-svg" viewBox="0 0 600 100">
+                <text x="50%" y="50%" class="hero-title-text">Yuichi & Yuma</text>
+            </svg>
+            <p class="hero-date anim-item">2026.06.20 SAT</p>
+        </div>
+    </div>
+
+    <section class="scroll-section">
+        <h2>Greeting<span class="jp-sub">ご挨拶</span></h2>
+        <div class="greeting-layout content-hidden">
+            <div class="greeting-text">
+                <p>
+                    本日はご多用の中<br>
+                    私たちの結婚式にご列席いただき<br>
+                    誠にありがとうございます
+                </p>
+                <p>    
+                    皆様に見守られ<br>
+                    今日という日を迎えられたことを<br>
+                    心より感謝申し上げます
+                </p>
+            </div>
+            <div class="greeting-img-row">
+                <img src="https://images.unsplash.com/photo-1625494723908-117565c404b9?auto=format&fit=crop&q=80&w=400" class="greeting-photo" alt="Couple 1">
+                <img src="https://images.unsplash.com/photo-1516961642265-531546e84af2?auto=format&fit=crop&q=80&w=400" class="greeting-photo" style="margin-top: 30px;" alt="Couple 2">
+            </div>
+        </div>
+    </section>
+
+    <section class="scroll-section">
+        <h2>Time Table<span class="jp-sub">本日の流れ</span></h2>
+        <div class="timeline-container">
+            <div class="timeline-line"></div>
+
+            <div class="timeline-row content-hidden">
+                <div class="t-icon"><i class="fa-solid fa-church"></i></div>
+                <span class="t-time">11:00</span>
+                <h3 class="t-title">Ceremony</h3>
+                <p style="font-size:0.9rem; color:#888;">挙式</p>
+            </div>
+
+            <div class="timeline-row content-hidden">
+                <img src="https://images.unsplash.com/photo-1544078751-58fee2d8a03b?auto=format&fit=crop&q=80&w=300" class="atmosphere-img" alt="Chapel">
+            </div>
+
+            <div class="timeline-row content-hidden">
+                <div class="t-icon"><i class="fa-solid fa-champagne-glasses"></i></div>
+                <span class="t-time">11:45</span>
+                <h3 class="t-title">Welcome Party</h3>
+                <p style="font-size:0.9rem; color:#888;">ガーデンにて乾杯</p>
+            </div>
+
+            <div class="timeline-row content-hidden">
+                <img src="https://images.unsplash.com/photo-1605658639599-2313d4b6db2b?auto=format&fit=crop&q=80&w=300" class="atmosphere-img" alt="Rings">
+            </div>
+
+            <div class="timeline-row content-hidden">
+                <div class="t-icon"><i class="fa-solid fa-utensils"></i></div>
+                <span class="t-time">12:30</span>
+                <h3 class="t-title">Reception</h3>
+                <p style="font-size:0.9rem; color:#888;">披露宴開宴</p>
+            </div>
+        </div>
+    </section>
+<section class="scroll-section">
+        <h2>Menu<span class="jp-sub">お食事</span></h2>
+        
+        <div class="menu-container content-hidden">
+            <div class="menu-item">
+                <div class="menu-title">Amuse</div>
+                <div class="menu-desc">季節の小さなオードブル</div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-title">Appetizer</div>
+                <div class="menu-desc">海の幸のマリネと彩り野菜のテリーヌ<br>キャビアを添えて</div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-title">Soup</div>
+                <div class="menu-desc">季節野菜のポタージュ</div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-title">Fish</div>
+                <div class="menu-desc">真鯛のポワレ 白ワインソース</div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-title">Meat</div>
+                <div class="menu-desc">国産牛フィレ肉のロースト<br>トリュフ香るソース・ペリグー</div>
+            </div>
+            
+            <div class="menu-item">
+                <div class="menu-title">Dessert</div>
+                <div class="menu-desc">パティシエ特製ウエディングケーキと<br>季節のフルーツ</div>
+            </div>
+            
+            <div class="menu-item" style="margin-top: 40px;">
+                <div class="menu-desc" style="font-size: 0.85rem; color: #777;">
+                    パン / コーヒー または 紅茶
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="scroll-section">
+        <h2>Profile<span class="jp-sub">二人について</span></h2>
+        
+        <div class="profile-container">
+            <div class="profile-card content-hidden">
+                <div class="p-content-wrap">
+                    <div class="p-label">GROOM</div>
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=500" class="p-photo" alt="Groom">
+                    <div class="p-name">YUICHI</div>
+                </div>
+                <table class="p-table">
+                    <tr><th>Birth</th><td>1995.05.15</td></tr>
+                    <tr><th>Home</th><td>東京都</td></tr>
+                    <tr><th>Type</th><td>A型</td></tr>
+                    <tr><th>Hobby</th><td>サウナ、建築巡り</td></tr>
+                </table>
+            </div>
+
+            <div class="profile-card content-hidden">
+                <div class="p-content-wrap">
+                    <div class="p-label">BRIDE</div>
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=500" class="p-photo" alt="Bride">
+                    <div class="p-name">YUMA</div>
+                </div>
+                <table class="p-table">
+                    <tr><th>Birth</th><td>1997.08.22</td></tr>
+                    <tr><th>Home</th><td>神奈川県</td></tr>
+                    <tr><th>Type</th><td>O型</td></tr>
+                    <tr><th>Hobby</th><td>旅行、食べ歩き</td></tr>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="scroll-section qa-section-wrapper">
+        <h2>Q & A<span class="jp-sub">お互いについて</span></h2>
+        
+        <div class="qa-section">
+            <div class="qa-item">
+                <div class="qa-q qa-anim-q">Q. お互いの第一印象は？</div>
+                <div class="qa-a-box qa-anim-a">
+                    <div class="qa-row">
+                        <span class="qa-name">YUICHI &rsaquo;</span>
+                        <p class="qa-text">笑顔が素敵で、周りをパッと明るくする人だなと思いました。</p>
+                    </div>
+                    <div class="qa-row">
+                        <span class="qa-name">YUMA &rsaquo;</span>
+                        <p class="qa-text">誠実そうで、声が素敵だなと思いました。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-q qa-anim-q">Q. 相手の影響で好きになったもの</div>
+                <div class="qa-a-box qa-anim-a">
+                    <div class="qa-row">
+                        <span class="qa-name">YUICHI &rsaquo;</span>
+                        <p class="qa-text">「コーヒー」<br>彼女と飲む休日のコーヒーが日課になりました。</p>
+                    </div>
+                    <div class="qa-row">
+                        <span class="qa-name">YUMA &rsaquo;</span>
+                        <p class="qa-text">「カフェ巡り」<br>休日は二人で美味しいコーヒーを求めて出かけます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-q qa-anim-q">Q. 10年後どうなっていたい？</div>
+                <div class="qa-a-box qa-anim-a">
+                    <div class="qa-row">
+                        <span class="qa-name">YUICHI &rsaquo;</span>
+                        <p class="qa-text">「笑顔の絶えない家庭」<br>穏やかで温かい家庭を築きたいです。</p>
+                    </div>
+                    <div class="qa-row">
+                        <span class="qa-name">YUMA &rsaquo;</span>
+                        <p class="qa-text">「毎年の記念日旅行」<br>10年後も二人で仲良く旅行に行けたら幸せです。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="qa-images-grid content-hidden">
+                <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&q=80&w=300" class="qa-grid-img">
+                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=300" class="qa-grid-img">
+            </div>
+        </div>
+    </section>
+
+    <section class="scroll-section" style="padding: 60px 0; max-width: 100%;">
+        <h2>Our Journey<span class="jp-sub">これまでの歩み</span></h2>
+        <p style="text-align:center; font-size:0.8rem; margin-bottom:20px; color:#999;" class="content-hidden">
+            <i class="fa-solid fa-arrow-right"></i> Scroll & Tap Photo
+        </p>
+
+        <div class="gallery-wrap content-hidden">
+            <div class="marquee-wrapper" id="marquee">
+                <div class="gallery-card" onclick="openModal('2021', '出会った頃の写真。近場の公園でおしゃべりするのが一番の楽しみでした。', 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=600')">
+                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                    <div class="g-caption">
+                        <span class="g-year">2021</span>
+                        <div class="g-text">出会った頃の写真。<br>公園デートが定番でした。</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card" onclick="openModal('2022', '初めての遠出旅行は京都へ。紅葉がとても綺麗で、二人で感動したのを覚えています。', 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=600')">
+                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                    <div class="g-caption">
+                        <span class="g-year">2022</span>
+                        <div class="g-text">初めての旅行は京都へ。<br>紅葉に感動しました。</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card" onclick="openModal('2023', '二人の共通の趣味になったカフェ巡り。週末は美味しいコーヒーを求めて色々な街へ行きました。', 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=600')">
+                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                    <div class="g-caption">
+                        <span class="g-year">2023</span>
+                        <div class="g-text">週末のカフェ巡り。<br>お気に入りの時間。</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card" onclick="openModal('2024', '記念日のプロポーズ。一生忘れられない、最高の瞬間になりました。', 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=600')">
+                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                    <div class="g-caption">
+                        <span class="g-year">2024</span>
+                        <div class="g-text">プロポーズ。<br>一生忘れられない日に。</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card" onclick="openModal('2025', '結婚式の準備期間。前撮りでは少し緊張しましたが、カメラマンさんのおかげで笑顔になれました。', 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=600')">
+                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                    <div class="g-caption">
+                        <span class="g-year">2025</span>
+                        <div class="g-text">結婚式の準備期間。<br>前撮りも良い思い出です。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Thank you for coming today.</p>
+        <p style="margin-top:10px;">YUICHI & YUMA</p>
+    </footer>
+
+    <div id="modal" onclick="closeModal()">
+        <div class="close-btn">&times;</div>
+        <img src="" id="m-img" class="modal-img">
+        <div class="modal-content">
+            <h3 id="m-year" style="color:var(--accent-gold); font-family:var(--font-en);"></h3>
+            <p id="m-text" style="margin-top:10px; font-family:var(--font-jp);"></p>
+        </div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- 1. 桜アニメーション ---
+        function createSakura() {
+            const container = document.getElementById('sakura-container');
+            const numPetals = 50;
+            for (let i = 0; i < numPetals; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('sakura-petal');
+                container.appendChild(petal);
+                const startX = Math.random() * window.innerWidth;
+                const startY = Math.random() * window.innerHeight;
+                const scale = Math.random() * 0.4 + 0.4;
+                const opacity = Math.random() * 0.3 + 0.4;
+                gsap.set(petal, { x: startX, y: startY, scale: scale, opacity: opacity, rotation: Math.random() * 360 });
+                const speed = Math.random() * 20 + 30;
+                const remainingDistance = window.innerHeight + 100 - startY;
+                const fullDistance = window.innerHeight + 150;
+                const firstDuration = (remainingDistance / fullDistance) * speed;
+                gsap.to(petal, {
+                    y: window.innerHeight + 100, x: startX + (Math.random() - 0.5) * 200, rotation: "+=180",
+                    duration: firstDuration, ease: "none",
+                    onComplete: () => {
+                        gsap.set(petal, { y: -50, x: Math.random() * window.innerWidth });
+                        gsap.to(petal, {
+                            y: window.innerHeight + 100, x: "+=" + ((Math.random() - 0.5) * 200), rotation: "+=360",
+                            duration: speed, ease: "none", repeat: -1, delay: Math.random() * 5
+                        });
+                    }
+                });
+            }
+        }
+        createSakura();
+
+        // --- 2. Top Screen ---
+        document.fonts.ready.then(function () {
+            gsap.to(".hero-title-text", { strokeDashoffset: 0, duration: 4.0, ease: "power1.inOut", delay: 0.5 });
+            gsap.to(".hero-title-text", { fill: "#444444", duration: 2.0, ease: "power2.out", delay: 3.5 });
+            gsap.fromTo(".anim-item", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 2.0, ease: "power2.out", delay: 4.0, stagger: 0.5 });
+        });
+
+        // ===============================================
+        //  【重要】スクロールアニメーション (Sequence)
+        // ===============================================
+
+        const sections = document.querySelectorAll(".scroll-section");
+
+        sections.forEach((section) => {
+            const title = section.querySelector("h2");
+            // 一般的なコンテンツ
+            const contents = section.querySelectorAll(".content-hidden");
+            
+            // Q&A用の個別アニメーション要素
+            const qaQs = section.querySelectorAll(".qa-anim-q");
+            const qaAs = section.querySelectorAll(".qa-anim-a");
+
+            if (title) {
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 75%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+
+                // 1. タイトルアニメーション (ズームイン)
+                tl.fromTo(title, 
+                    { autoAlpha: 0, scale: 0.5, filter: "blur(4px)" },
+                    { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 1.0, ease: "power3.out" }
+                );
+
+                // --- Q&Aセクションの場合：会話のリズムを作る ---
+                if (section.classList.contains("qa-section-wrapper")) {
+                    // Q1 -> (待機) -> A1 -> (待機) -> Q2 -> ... の順で表示
+                    
+                    // すべてのQとAをペアにしてループ処理
+                    const items = section.querySelectorAll(".qa-item");
+                    items.forEach((item) => {
+                        const q = item.querySelector(".qa-anim-q");
+                        const a = item.querySelector(".qa-anim-a");
+
+                        // Qを表示
+                        tl.fromTo(q, 
+                            { autoAlpha: 0, y: 20 },
+                            { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" },
+                            "-=0.2"
+                        );
+                        // 間を開けて Aを表示 (0.4秒の溜め)
+                        tl.fromTo(a, 
+                            { autoAlpha: 0, y: 15 },
+                            { autoAlpha: 1, y: 0, duration: 1.0, ease: "power2.out" },
+                            "+=0.4" 
+                        );
+                    });
+
+                    // 最後に画像を出す
+                    if(contents.length > 0) {
+                         tl.fromTo(contents, 
+                            { autoAlpha: 0, y: 20 },
+                            { autoAlpha: 1, y: 0, duration: 1.0 },
+                            "-=0.5"
+                        );
+                    }
+
+                } else {
+                    // --- 通常セクションの場合 ---
+                    if (contents.length > 0) {
+                        tl.fromTo(contents, 
+                            { autoAlpha: 0, y: 20 },
+                            { 
+                                autoAlpha: 1, y: 0, 
+                                duration: 1.5, 
+                                ease: "power2.out",
+                                stagger: 0.2 
+                            },
+                            "-=0.2" 
+                        );
+                    }
+                }
+            }
+        });
+
+        // C. タイムラインの線
+        gsap.to(".timeline-line", {
+            height: "100%", ease: "none",
+            scrollTrigger: {
+                trigger: ".timeline-container",
+                start: "top 75%",
+                end: "bottom 75%",
+                scrub: 1
+            }
+        });
+
+        // --- 4. Gallery ---
+        const marquee = document.getElementById('marquee');
+        const clone = marquee.innerHTML;
+        marquee.innerHTML += clone + clone;
+        const marqueeAnim = gsap.to("#marquee", { xPercent: -50, ease: "none", duration: 35, repeat: -1 });
+        const modal = document.getElementById('modal');
+        const mImg = document.getElementById('m-img');
+        const mYear = document.getElementById('m-year');
+        const mText = document.getElementById('m-text');
+        function openModal(year, text, src) {
+            marqueeAnim.pause();
+            mYear.innerText = year; mText.innerText = text; mImg.src = src;
+            modal.classList.add('active');
+        }
+        function closeModal() { modal.classList.remove('active'); marqueeAnim.play(); }
+    </script>
+</body>
+</html>
