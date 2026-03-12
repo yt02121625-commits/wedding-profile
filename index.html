@@ -57,8 +57,8 @@
             font-weight: 600; opacity: 0; visibility: hidden;
         }
         .jp-sub { display: block; font-family: var(--font-jp); font-size: 0.85rem; -webkit-text-fill-color: var(--text-gray); margin-top: 5px; letter-spacing: 0.2em; }
-        section { padding: 80px 0; max-width: 900px; margin: 0 auto; position: relative; } /* 横幅いっぱいに使うためサイドのpaddingを調整 */
-        .section-inner { padding: 0 20px; } /* コンテンツの中身用のpadding */
+        section { padding: 80px 0; max-width: 900px; margin: 0 auto; position: relative; }
+        .section-inner { padding: 0 20px; }
         img { width: 100%; height: auto; display: block; object-fit: cover; }
         .content-hidden { opacity: 0; transform: translateY(30px); visibility: hidden; }
 
@@ -148,7 +148,7 @@
         .qa-text { font-size: 0.95rem; line-height: 1.7; color: #444; }
         .qa-anim-q, .qa-anim-a { opacity: 0; transform: translateY(20px); visibility: hidden; }
 
-        /* --- Footer & Modal & BGM --- */
+        /* --- Footer & Modal --- */
         footer { text-align:center; padding:60px 20px 100px; color:#aaa; font-size:0.8rem; font-family:var(--font-en); }
 
         #modal { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; padding: 20px; backdrop-filter: blur(5px); }
@@ -156,32 +156,12 @@
         .modal-img { max-width: 100%; max-height: 50vh; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
         .modal-content { max-width: 500px; text-align: center; margin-top: 25px; }
         .close-btn { position: absolute; top: 20px; right: 25px; font-size: 2.5rem; color: #333; cursor: pointer; }
-
-        .bgm-btn {
-            position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px;
-            background: #fff; border-radius: 50%; box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
-            display: flex; justify-content: center; align-items: center; z-index: 9000;
-            color: var(--accent-gold); font-size: 1.2rem; cursor: pointer; border: 2px solid var(--accent-gold);
-            transition: all 0.3s ease;
-        }
-        .bgm-btn.playing { background: var(--gold-gradient); color: #fff; border-color: transparent; animation: spin 4s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div class="bg-pattern"></div>
     <div id="sakura-container"></div>
-
-    <audio id="bgm-audio" loop src="https://assets.mixkit.co/music/preview/mixkit-romantic-wedding-piano-136.mp3"></audio>
-
-<audio id="bgm-audio" loop preload="auto">
-    <source src="https://www.shosansho.com/common/audio/wedding_bgm_sample.mp3" type="audio/mpeg">
-    <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-wedding-piano-136.mp3" type="audio/mpeg">
-</audio>
-    <div class="bgm-btn" id="bgm-toggle" onclick="toggleBGM()">
-        <i class="fa-solid fa-music"></i>
-    </div>
 
     <div class="hero">
         <div class="hero-slide slide-1"></div>
@@ -321,7 +301,7 @@
                 </div>
             </div>
 
-            <div>
+            <div style="margin-top: 40px;">
                 <div class="section-inner">
                     <div class="profile-card">
                         <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300" class="p-photo">
@@ -481,32 +461,8 @@
             gsap.fromTo(".anim-item", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 2.0, ease: "power2.out", delay: 4.0, stagger: 0.5 });
         });
 
-        // --- 3. BGM Control ---
-        const audio = document.getElementById('bgm-audio');
-        const bgmBtn = document.getElementById('bgm-toggle');
-        function toggleBGM() {
-    const audio = document.getElementById('bgm-audio');
-    const bgmBtn = document.getElementById('bgm-toggle');
-    
-    if (audio.paused) {
-        // 再生前に一度ロードを強制する（これで解決することが多いです）
-        audio.load(); 
-        audio.play().then(() => {
-            bgmBtn.classList.add('playing');
-            bgmBtn.innerHTML = '<i class="fa-solid fa-compact-disc"></i>';
-        }).catch(e => {
-            console.log("再生エラー:", e);
-            alert("スマホの消音モードを解除して再度お試しください");
-        });
-    } else {
-        audio.pause();
-        bgmBtn.classList.remove('playing');
-        bgmBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
-    }
-}
-
-        // --- 4. ハイブリッド・オートスクロール（自動＋スワイプ） ---
-        let isModalOpen = false; // モーダル開閉状態のフラグ
+        // --- 3. ハイブリッド・オートスクロール（自動＋スワイプ） ---
+        let isModalOpen = false;
 
         function setupAutoScroll(containerId, speed) {
             const container = document.getElementById(containerId);
@@ -519,7 +475,7 @@
             let isTouching = false;
             let startX, scrollLeft;
 
-            // マウスドラッグ対応（PC向けのおまけ機能）
+            // マウスドラッグ対応
             container.addEventListener('mousedown', (e) => {
                 isTouching = true;
                 startX = e.pageX - container.offsetLeft;
@@ -540,10 +496,8 @@
             container.addEventListener('touchend', () => isTouching = false);
 
             function scrollLoop() {
-                // ユーザーが触っていない ＆ モーダルが開いていない時だけ進む
                 if (!isTouching && !isModalOpen) {
                     container.scrollLeft += speed;
-                    // 半分（複製した境目）まで進んだら、一瞬で最初に戻すことでシームレスループ
                     if (container.scrollLeft >= track.scrollWidth / 2) {
                         container.scrollLeft = 0;
                     }
@@ -553,13 +507,12 @@
             requestAnimationFrame(scrollLoop);
         }
 
-        // 各スライダーに適用（数値はスピード：1.0が基本）
         setupAutoScroll('groom-history', 1.0);
         setupAutoScroll('bride-history', 1.0);
         setupAutoScroll('journey-slider', 1.0);
 
 
-        // --- 5. Scroll Animations ---
+        // --- 4. Scroll Animations ---
         const sections = document.querySelectorAll(".scroll-section");
         sections.forEach((section) => {
             const title = section.querySelector("h2");
@@ -594,19 +547,19 @@
             ScrollTrigger.create({ trigger: row, start: "top 60%", onEnter: () => node.classList.add('active'), onLeaveBack: () => node.classList.remove('active') });
         });
 
-        // --- 6. Modal ---
+        // --- 5. Modal ---
         const modal = document.getElementById('modal');
         const mImg = document.getElementById('m-img');
         const mYear = document.getElementById('m-year');
         const mText = document.getElementById('m-text');
         
         function openModal(title, text, src) {
-            isModalOpen = true; // モーダルが開いたら自動スクロールを一時停止
+            isModalOpen = true; 
             mYear.innerText = title; mText.innerText = text; mImg.src = src;
             modal.classList.add('active');
         }
         function closeModal() { 
-            isModalOpen = false; // モーダルが閉じたら自動スクロール再開
+            isModalOpen = false; 
             modal.classList.remove('active'); 
         }
     </script>
