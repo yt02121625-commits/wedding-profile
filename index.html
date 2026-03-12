@@ -22,7 +22,7 @@
     <style>
         /* --- Base Design --- */
         :root {
-            --bg-color: #fcfcfc; /* より明るく上品な白へ */
+            --bg-color: #fcfcfc;
             --text-main: #333333;
             --text-gray: #888888;
             --accent-gold: #C5A059;
@@ -57,7 +57,8 @@
             font-weight: 600; opacity: 0; visibility: hidden;
         }
         .jp-sub { display: block; font-family: var(--font-jp); font-size: 0.85rem; -webkit-text-fill-color: var(--text-gray); margin-top: 5px; letter-spacing: 0.2em; }
-        section { padding: 80px 20px; max-width: 900px; margin: 0 auto; position: relative; }
+        section { padding: 80px 0; max-width: 900px; margin: 0 auto; position: relative; } /* 横幅いっぱいに使うためサイドのpaddingを調整 */
+        .section-inner { padding: 0 20px; } /* コンテンツの中身用のpadding */
         img { width: 100%; height: auto; display: block; object-fit: cover; }
         .content-hidden { opacity: 0; transform: translateY(30px); visibility: hidden; }
 
@@ -81,30 +82,19 @@
         .greeting-photo { width: 48%; border-radius: 4px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
         .greeting-text { font-family: var(--font-jp); text-align: center; line-height: 2.4; font-size: 0.95rem; }
 
-        /* --- 新Time Table (左軸・光のノード) --- */
+        /* --- Time Table --- */
         .tt-wrapper { position: relative; padding: 20px 0 20px 30px; max-width: 500px; margin: 0 auto; }
         .tt-line { position: absolute; top: 0; left: 10px; width: 1px; height: 100%; background: #eee; z-index: 0; }
         .tt-line-active { position: absolute; top: 0; left: 10px; width: 2px; height: 0%; background: var(--gold-gradient); z-index: 1; }
-        
         .tt-row { position: relative; z-index: 2; margin-bottom: 50px; display: flex; align-items: center; justify-content: space-between; }
         .tt-row:last-child { margin-bottom: 0; }
-        
-        .tt-node {
-            position: absolute; left: -26px; width: 12px; height: 12px; border-radius: 50%;
-            background: #fff; border: 2px solid #ddd; transition: all 0.5s ease;
-        }
-        .tt-node.active {
-            background: var(--accent-gold); border-color: var(--accent-gold);
-            box-shadow: 0 0 15px rgba(197, 160, 89, 0.8);
-            animation: popBubble 0.6s ease-out forwards;
-        }
+        .tt-node { position: absolute; left: -26px; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid #ddd; transition: all 0.5s ease; }
+        .tt-node.active { background: var(--accent-gold); border-color: var(--accent-gold); box-shadow: 0 0 15px rgba(197, 160, 89, 0.8); animation: popBubble 0.6s ease-out forwards; }
         @keyframes popBubble { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
-
         .tt-content { flex: 1; padding-right: 15px; }
         .tt-time { font-family: var(--font-en); font-size: 1.3rem; color: var(--accent-gold); font-weight: 600; letter-spacing: 0.05em; line-height: 1; margin-bottom: 5px; }
         .tt-title { font-family: var(--font-jp); font-size: 1.1rem; font-weight: 500; color: var(--text-main); }
         .tt-desc { font-size: 0.8rem; color: var(--text-gray); margin-top: 2px; }
-        
         .tt-img-box { width: 90px; height: 90px; flex-shrink: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transform: rotate(2deg); }
         .tt-img-box img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -114,8 +104,8 @@
         .menu-title { font-family: var(--font-en); color: var(--accent-gold); font-size: 1.4rem; letter-spacing: 0.1em; margin-bottom: 5px; }
         .menu-desc { font-family: var(--font-jp); font-size: 0.95rem; color: var(--text-main); line-height: 1.6; }
 
-        /* --- Profile & History --- */
-        .profile-container { display: flex; flex-direction: column; gap: 40px; max-width: 800px; margin: 0 auto; }
+        /* --- Profile & History (縦並び化) --- */
+        .profile-wrapper { display: flex; flex-direction: column; gap: 80px; }
         .profile-card { text-align: center; }
         .p-photo { width: 160px; height: 160px; object-fit: cover; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 15px; }
         .p-name { font-family: var(--font-en); font-size: 1.6rem; letter-spacing: 0.1em; color: var(--text-main); font-weight: 600; }
@@ -123,32 +113,21 @@
         .p-table th { color: var(--accent-gold); font-weight: normal; padding: 10px 0; width: 35%; border-bottom: 1px dashed #ddd; font-family: var(--font-en); font-size: 1.1rem;}
         .p-table td { padding: 10px 0; border-bottom: 1px dashed #ddd; }
 
-        /* History Toggle & Slider */
-        .history-section { margin-top: 60px; }
-        .toggle-wrap { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
-        .toggle-btn {
-            background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold);
-            padding: 8px 30px; border-radius: 30px; font-family: var(--font-en); font-size: 1.2rem;
-            cursor: pointer; transition: all 0.3s ease; outline: none;
-        }
-        .toggle-btn.active { background: var(--gold-gradient); color: #fff; box-shadow: 0 5px 15px rgba(197, 160, 89, 0.4); border-color: transparent; }
+        /* --- 自動＋手動ハイブリッド横スクロール --- */
+        .scroll-hint { text-align:center; font-size:0.8rem; margin:20px 0 10px; color:#aaa; }
         
-        .history-slider-wrap { position: relative; width: 100%; }
-        .history-slider {
-            display: none; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch; padding: 10px 20px 40px; gap: 20px;
+        .auto-scroll-container {
+            width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
+            -ms-overflow-style: none; scrollbar-width: none; cursor: grab;
         }
-        .history-slider.active { display: flex; animation: fadeIn 0.5s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* スクロールバー非表示 */
-        .history-slider::-webkit-scrollbar, .journey-slider::-webkit-scrollbar { display: none; }
-        .history-slider, .journey-slider { -ms-overflow-style: none; scrollbar-width: none; }
+        .auto-scroll-container::-webkit-scrollbar { display: none; }
+        .auto-scroll-container:active { cursor: grabbing; }
+
+        .auto-scroll-track { display: flex; gap: 20px; padding: 10px 20px 40px; width: max-content; }
 
         .h-card, .g-card {
-            min-width: 75vw; max-width: 300px; scroll-snap-align: center; flex-shrink: 0;
-            background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-            cursor: pointer;
+            width: 75vw; max-width: 300px; flex-shrink: 0; background: #fff; padding: 15px;
+            border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); cursor: pointer;
         }
         .h-img-box, .g-img-box { width: 100%; height: 200px; border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
         .h-img, .g-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
@@ -157,6 +136,7 @@
         .h-phase { font-family: var(--font-script); font-size: 2rem; color: var(--accent-gold); line-height: 1; }
         .h-jp { font-size: 0.75rem; color: #aaa; margin-bottom: 8px; letter-spacing: 0.1em; }
         .h-text, .g-text { font-size: 0.85rem; color: var(--text-main); line-height: 1.6; }
+        .g-year { font-family: var(--font-en); color: var(--accent-gold); font-size: 1.4rem; display: block; font-weight: 600;}
 
         /* --- Q&A --- */
         .qa-item { margin-bottom: 50px; text-align: center; }
@@ -168,10 +148,6 @@
         .qa-text { font-size: 0.95rem; line-height: 1.7; color: #444; }
         .qa-anim-q, .qa-anim-a { opacity: 0; transform: translateY(20px); visibility: hidden; }
 
-        /* --- Our Journey (Swipeable) --- */
-        .journey-slider { display: flex; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 10px 20px 40px; gap: 20px; }
-        .g-year { font-family: var(--font-en); color: var(--accent-gold); font-size: 1.4rem; display: block; font-weight: 600;}
-
         /* --- Footer & Modal & BGM --- */
         footer { text-align:center; padding:60px 20px 100px; color:#aaa; font-size:0.8rem; font-family:var(--font-en); }
 
@@ -181,7 +157,6 @@
         .modal-content { max-width: 500px; text-align: center; margin-top: 25px; }
         .close-btn { position: absolute; top: 20px; right: 25px; font-size: 2.5rem; color: #333; cursor: pointer; }
 
-        /* BGM Button */
         .bgm-btn {
             position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px;
             background: #fff; border-radius: 50%; box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
@@ -191,7 +166,6 @@
         }
         .bgm-btn.playing { background: var(--gold-gradient); color: #fff; border-color: transparent; animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-
     </style>
 </head>
 <body>
@@ -219,166 +193,175 @@
     </div>
 
     <section class="scroll-section">
-        <h2>Greeting<span class="jp-sub">ご挨拶</span></h2>
-        <div class="greeting-layout content-hidden">
-            <div class="greeting-text">
-                <p>本日はご多用の中<br>私たちの結婚式にご列席いただき<br>誠にありがとうございます</p>
-                <p>皆様に見守られ<br>今日という日を迎えられたことを<br>心より感謝申し上げます</p>
-            </div>
-            <div class="greeting-img-row">
-                <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=400" class="greeting-photo">
-                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400" class="greeting-photo" style="margin-top: 30px;">
+        <div class="section-inner">
+            <h2>Greeting<span class="jp-sub">ご挨拶</span></h2>
+            <div class="greeting-layout content-hidden">
+                <div class="greeting-text">
+                    <p>本日はご多用の中<br>私たちの結婚式にご列席いただき<br>誠にありがとうございます</p>
+                    <p>皆様に見守られ<br>今日という日を迎えられたことを<br>心より感謝申し上げます</p>
+                </div>
+                <div class="greeting-img-row">
+                    <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=400" class="greeting-photo">
+                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400" class="greeting-photo" style="margin-top: 30px;">
+                </div>
             </div>
         </div>
     </section>
 
     <section class="scroll-section">
-        <h2>Time Table<span class="jp-sub">本日の流れ</span></h2>
-        <div class="tt-wrapper content-hidden">
-            <div class="tt-line"></div>
-            <div class="tt-line-active" id="tt-active-line"></div>
+        <div class="section-inner">
+            <h2>Time Table<span class="jp-sub">本日の流れ</span></h2>
+            <div class="tt-wrapper content-hidden">
+                <div class="tt-line"></div>
+                <div class="tt-line-active" id="tt-active-line"></div>
 
-            <div class="tt-row tt-trigger">
-                <div class="tt-node"></div>
-                <div class="tt-content">
-                    <div class="tt-time">11:00</div>
-                    <div class="tt-title">Ceremony</div>
-                    <div class="tt-desc">挙式</div>
+                <div class="tt-row tt-trigger">
+                    <div class="tt-node"></div>
+                    <div class="tt-content">
+                        <div class="tt-time">11:00</div>
+                        <div class="tt-title">Ceremony</div>
+                        <div class="tt-desc">挙式</div>
+                    </div>
+                    <div class="tt-img-box"><img src="https://images.unsplash.com/photo-1544078751-58fee2d8a03b?auto=format&fit=crop&q=80&w=200"></div>
                 </div>
-                <div class="tt-img-box"><img src="https://images.unsplash.com/photo-1544078751-58fee2d8a03b?auto=format&fit=crop&q=80&w=200"></div>
-            </div>
 
-            <div class="tt-row tt-trigger">
-                <div class="tt-node"></div>
-                <div class="tt-content">
-                    <div class="tt-time">11:45</div>
-                    <div class="tt-title">Welcome Party</div>
-                    <div class="tt-desc">ガーデンにて乾杯</div>
+                <div class="tt-row tt-trigger">
+                    <div class="tt-node"></div>
+                    <div class="tt-content">
+                        <div class="tt-time">11:45</div>
+                        <div class="tt-title">Welcome Party</div>
+                        <div class="tt-desc">ガーデンにて乾杯</div>
+                    </div>
+                    <div class="tt-img-box" style="transform: rotate(-3deg);"><img src="https://images.unsplash.com/photo-1605658639599-2313d4b6db2b?auto=format&fit=crop&q=80&w=200"></div>
                 </div>
-                <div class="tt-img-box" style="transform: rotate(-3deg);"><img src="https://images.unsplash.com/photo-1605658639599-2313d4b6db2b?auto=format&fit=crop&q=80&w=200"></div>
-            </div>
 
-            <div class="tt-row tt-trigger">
-                <div class="tt-node"></div>
-                <div class="tt-content">
-                    <div class="tt-time">12:30</div>
-                    <div class="tt-title">Reception</div>
-                    <div class="tt-desc">披露宴開宴</div>
+                <div class="tt-row tt-trigger">
+                    <div class="tt-node"></div>
+                    <div class="tt-content">
+                        <div class="tt-time">12:30</div>
+                        <div class="tt-title">Reception</div>
+                        <div class="tt-desc">披露宴開宴</div>
+                    </div>
+                    <div class="tt-img-box"><img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=200"></div>
                 </div>
-                <div class="tt-img-box"><img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=200"></div>
             </div>
         </div>
     </section>
 
     <section class="scroll-section">
-        <h2>Menu<span class="jp-sub">お食事</span></h2>
-        <div class="menu-container content-hidden">
-            <div class="menu-item"><div class="menu-title">Amuse</div><div class="menu-desc">季節の小さなオードブル</div></div>
-            <div class="menu-item"><div class="menu-title">Appetizer</div><div class="menu-desc">海の幸のマリネと彩り野菜のテリーヌ<br>キャビアを添えて</div></div>
-            <div class="menu-item"><div class="menu-title">Soup</div><div class="menu-desc">季節野菜のポタージュ</div></div>
-            <div class="menu-item"><div class="menu-title">Fish</div><div class="menu-desc">真鯛のポワレ 白ワインソース</div></div>
-            <div class="menu-item"><div class="menu-title">Meat</div><div class="menu-desc">国産牛フィレ肉のロースト<br>トリュフ香るソース・ペリグー</div></div>
-            <div class="menu-item"><div class="menu-title">Dessert</div><div class="menu-desc">特製ウエディングケーキと季節のフルーツ</div></div>
+        <div class="section-inner">
+            <h2>Menu<span class="jp-sub">お食事</span></h2>
+            <div class="menu-container content-hidden">
+                <div class="menu-item"><div class="menu-title">Amuse</div><div class="menu-desc">季節の小さなオードブル</div></div>
+                <div class="menu-item"><div class="menu-title">Appetizer</div><div class="menu-desc">海の幸のマリネと彩り野菜のテリーヌ<br>キャビアを添えて</div></div>
+                <div class="menu-item"><div class="menu-title">Soup</div><div class="menu-desc">季節野菜のポタージュ</div></div>
+                <div class="menu-item"><div class="menu-title">Fish</div><div class="menu-desc">真鯛のポワレ 白ワインソース</div></div>
+                <div class="menu-item"><div class="menu-title">Meat</div><div class="menu-desc">国産牛フィレ肉のロースト<br>トリュフ香るソース・ペリグー</div></div>
+                <div class="menu-item"><div class="menu-title">Dessert</div><div class="menu-desc">特製ウエディングケーキと季節のフルーツ</div></div>
+            </div>
         </div>
     </section>
 
     <section class="scroll-section">
         <h2>Profile & History<span class="jp-sub">生い立ち</span></h2>
         
-        <div class="profile-container content-hidden">
-            <div class="toggle-wrap">
-                <button class="toggle-btn active" onclick="switchHistory('groom')">YUICHI</button>
-                <button class="toggle-btn" onclick="switchHistory('bride')">YUMA</button>
+        <div class="profile-wrapper content-hidden">
+            <div>
+                <div class="section-inner">
+                    <div class="profile-card">
+                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=300" class="p-photo">
+                        <div class="p-name">YUICHI</div>
+                        <table class="p-table">
+                            <tr><th>Birth</th><td>1997.12.25</td></tr>
+                            <tr><th>Home</th><td>愛知県 稲沢市</td></tr>
+                            <tr><th>Type</th><td>B型</td></tr>
+                            <tr><th>Hobby</th><td>サウナ、ジム</td></tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <p class="scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> Auto Scroll & Swipe</p>
+                
+                <div class="auto-scroll-container" id="groom-history">
+                    <div class="auto-scroll-track">
+                        <div class="h-card" onclick="openModal('Genesis', '誕生。よく泣き、よく笑う元気な赤ちゃんでした。', 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">Genesis</div><div class="h-jp">生まれたて</div><div class="h-text">誕生。元気な赤ちゃんでした。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('First Steps', '保育園時代。毎日泥だらけになって遊んでいました。', 'https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">First Steps</div><div class="h-jp">保育園</div><div class="h-text">毎日泥だらけになって遊んでいました。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('Discovery', '小学校時代。野球に出会い、スポーツの楽しさを知りました。', 'https://images.unsplash.com/photo-1508344928928-7137b29de216?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1508344928928-7137b29de216?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">Discovery</div><div class="h-jp">小学校</div><div class="h-text">スポーツの楽しさを知りました。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('Awakening', '中学校時代。部活と勉強の両立に励んだ3年間です。', 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">Awakening</div><div class="h-jp">中学校</div><div class="h-text">部活と勉強の両立に励みました。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('Youthful Days', '高校時代。一生の友人と出会い、青春を謳歌しました。', 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">Youthful Days</div><div class="h-jp">高校</div><div class="h-text">一生の友人と出会えた青春時代。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('Exploration', '大学時代。サークル活動や旅行で多くの経験をしました。', 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">Exploration</div><div class="h-jp">大学</div><div class="h-text">旅行やサークルで世界が広がりました。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('New Chapter', '社会人へ。責任とやりがいを感じる日々がスタート。', 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">New Chapter</div><div class="h-jp">社会人</div><div class="h-text">新しい挑戦と責任の始まりです。</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div id="section-groom" class="history-slider-wrap">
-                <div class="profile-card">
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=300" class="p-photo">
-                    <div class="p-name">YUICHI</div>
-                    <table class="p-table">
-                        <tr><th>Birth</th><td>1997.12.25</td></tr>
-                        <tr><th>Home</th><td>愛知県 稲沢市</td></tr>
-                        <tr><th>Type</th><td>B型</td></tr>
-                        <tr><th>Hobby</th><td>サウナ、ジム</td></tr>
-                    </table>
-                </div>
-                
-                <p style="text-align:center; font-size:0.8rem; margin:20px 0 10px; color:#aaa;"><i class="fa-solid fa-arrows-left-right"></i> Swipe & Tap</p>
-                
-                <div class="history-slider active">
-                    <div class="h-card" onclick="openModal('Genesis', '誕生。よく泣き、よく笑う元気な赤ちゃんでした。', 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">Genesis</div><div class="h-jp">生まれたて</div><div class="h-text">誕生。元気な赤ちゃんでした。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('First Steps', '保育園時代。毎日泥だらけになって遊んでいました。', 'https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">First Steps</div><div class="h-jp">保育園</div><div class="h-text">毎日泥だらけになって遊んでいました。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('Discovery', '小学校時代。野球に出会い、スポーツの楽しさを知りました。', 'https://images.unsplash.com/photo-1508344928928-7137b29de216?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1508344928928-7137b29de216?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">Discovery</div><div class="h-jp">小学校</div><div class="h-text">スポーツの楽しさを知りました。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('Awakening', '中学校時代。部活と勉強の両立に励んだ3年間です。', 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">Awakening</div><div class="h-jp">中学校</div><div class="h-text">部活と勉強の両立に励みました。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('Youthful Days', '高校時代。一生の友人と出会い、青春を謳歌しました。', 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">Youthful Days</div><div class="h-jp">高校</div><div class="h-text">一生の友人と出会えた青春時代。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('Exploration', '大学時代。サークル活動や旅行で多くの経験をしました。', 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">Exploration</div><div class="h-jp">大学</div><div class="h-text">旅行やサークルで世界が広がりました。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('New Chapter', '社会人へ。責任とやりがいを感じる日々がスタート。', 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">New Chapter</div><div class="h-jp">社会人</div><div class="h-text">新しい挑戦と責任の始まりです。</div>
+            <div>
+                <div class="section-inner">
+                    <div class="profile-card">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300" class="p-photo">
+                        <div class="p-name">YUMA</div>
+                        <table class="p-table">
+                            <tr><th>Birth</th><td>1999.02.16</td></tr>
+                            <tr><th>Home</th><td>北海道 札幌市</td></tr>
+                            <tr><th>Type</th><td>A型</td></tr>
+                            <tr><th>Hobby</th><td>ピラティス、カフェ巡り</td></tr>
+                        </table>
                     </div>
                 </div>
-            </div>
-
-            <div id="section-bride" class="history-slider-wrap" style="display: none;">
-                <div class="profile-card">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300" class="p-photo">
-                    <div class="p-name">YUMA</div>
-                    <table class="p-table">
-                        <tr><th>Birth</th><td>1999.02.16</td></tr>
-                        <tr><th>Home</th><td>北海道 札幌市</td></tr>
-                        <tr><th>Type</th><td>A型</td></tr>
-                        <tr><th>Hobby</th><td>ピラティス、カフェ巡り</td></tr>
-                    </table>
-                </div>
                 
-                <p style="text-align:center; font-size:0.8rem; margin:20px 0 10px; color:#aaa;"><i class="fa-solid fa-arrows-left-right"></i> Swipe & Tap</p>
+                <p class="scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> Auto Scroll & Swipe</p>
                 
-                <div class="history-slider active">
-                    <div class="h-card" onclick="openModal('Genesis', '誕生。雪の降る札幌で生まれました。', 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">Genesis</div><div class="h-jp">生まれたて</div><div class="h-text">雪の降る札幌で生まれました。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('First Steps', '保育園時代。お絵かきが大好きな女の子でした。', 'https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">First Steps</div><div class="h-jp">保育園</div><div class="h-text">お絵かきが大好きな女の子でした。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('Discovery', '小学校時代。ピアノを習い始め、音楽に触れました。', 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">Discovery</div><div class="h-jp">小学校</div><div class="h-text">ピアノを習い始めました。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('Awakening', '中学校時代。素敵な友人たちに恵まれました。', 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">Awakening</div><div class="h-jp">中学校</div><div class="h-text">素敵な友人たちとの出会い。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('Youthful Days', '高校時代。勉強も遊びも全力で楽しんだ思い出です。', 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">Youthful Days</div><div class="h-jp">高校</div><div class="h-text">何事にも全力で取り組んだ日々。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('Exploration', '大学時代。上京し、新しい価値観にたくさん触れました。', 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">Exploration</div><div class="h-jp">大学</div><div class="h-text">上京し、新しい刺激を受けた日々。</div>
-                    </div>
-                    <div class="h-card" onclick="openModal('New Chapter', '社会人へ。仕事を通じて自分を磨く毎日です。', 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=600')">
-                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
-                        <div class="h-phase">New Chapter</div><div class="h-jp">社会人</div><div class="h-text">仕事を通じて成長していく毎日。</div>
+                <div class="auto-scroll-container" id="bride-history">
+                    <div class="auto-scroll-track">
+                        <div class="h-card" onclick="openModal('Genesis', '誕生。雪の降る札幌で生まれました。', 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">Genesis</div><div class="h-jp">生まれたて</div><div class="h-text">雪の降る札幌で生まれました。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('First Steps', '保育園時代。お絵かきが大好きな女の子でした。', 'https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">First Steps</div><div class="h-jp">保育園</div><div class="h-text">お絵かきが大好きな女の子でした。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('Discovery', '小学校時代。ピアノを習い始め、音楽に触れました。', 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">Discovery</div><div class="h-jp">小学校</div><div class="h-text">ピアノを習い始めました。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('Awakening', '中学校時代。素敵な友人たちに恵まれました。', 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">Awakening</div><div class="h-jp">中学校</div><div class="h-text">素敵な友人たちとの出会い。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('Youthful Days', '高校時代。勉強も遊びも全力で楽しんだ思い出です。', 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">Youthful Days</div><div class="h-jp">高校</div><div class="h-text">何事にも全力で取り組んだ日々。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('Exploration', '大学時代。上京し、新しい価値観にたくさん触れました。', 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">Exploration</div><div class="h-jp">大学</div><div class="h-text">上京し、新しい刺激を受けた日々。</div>
+                        </div>
+                        <div class="h-card" onclick="openModal('New Chapter', '社会人へ。仕事を通じて自分を磨く毎日です。', 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=600')">
+                            <div class="h-img-box"><img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                            <div class="h-phase">New Chapter</div><div class="h-jp">社会人</div><div class="h-text">仕事を通じて成長していく毎日。</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -386,77 +369,62 @@
     </section>
 
     <section class="scroll-section qa-section-wrapper">
-        <h2>Q & A<span class="jp-sub">お互いについて</span></h2>
-        
-        <div class="qa-section">
-            <div class="qa-item">
-                <div class="qa-q qa-anim-q">Q. お互いの第一印象は？</div>
-                <div class="qa-a-box qa-anim-a">
-                    <div class="qa-row">
-                        <span class="qa-name">YUICHI</span>
-                        <p class="qa-text">笑顔が素敵で、周りをパッと明るくする人だなと思いました。</p>
-                    </div>
-                    <div class="qa-row">
-                        <span class="qa-name">YUMA</span>
-                        <p class="qa-text">誠実そうで、声が素敵だなと思いました。</p>
+        <div class="section-inner">
+            <h2>Q & A<span class="jp-sub">お互いについて</span></h2>
+            <div class="qa-section">
+                <div class="qa-item">
+                    <div class="qa-q qa-anim-q">Q. お互いの第一印象は？</div>
+                    <div class="qa-a-box qa-anim-a">
+                        <div class="qa-row"><span class="qa-name">YUICHI</span><p class="qa-text">笑顔が素敵で、周りをパッと明るくする人だなと思いました。</p></div>
+                        <div class="qa-row"><span class="qa-name">YUMA</span><p class="qa-text">誠実そうで、声が素敵だなと思いました。</p></div>
                     </div>
                 </div>
-            </div>
 
-            <div class="qa-item">
-                <div class="qa-q qa-anim-q">Q. 相手の影響で好きになったもの</div>
-                <div class="qa-a-box qa-anim-a">
-                    <div class="qa-row">
-                        <span class="qa-name">YUICHI</span>
-                        <p class="qa-text">「コーヒー」<br>彼女と飲む休日のコーヒーが日課になりました。</p>
-                    </div>
-                    <div class="qa-row">
-                        <span class="qa-name">YUMA</span>
-                        <p class="qa-text">「カフェ巡り」<br>休日は二人で美味しいコーヒーを求めて出かけます。</p>
+                <div class="qa-item">
+                    <div class="qa-q qa-anim-q">Q. 相手の影響で好きになったもの</div>
+                    <div class="qa-a-box qa-anim-a">
+                        <div class="qa-row"><span class="qa-name">YUICHI</span><p class="qa-text">「コーヒー」<br>彼女と飲む休日のコーヒーが日課になりました。</p></div>
+                        <div class="qa-row"><span class="qa-name">YUMA</span><p class="qa-text">「カフェ巡り」<br>休日は二人で美味しいコーヒーを求めて出かけます。</p></div>
                     </div>
                 </div>
-            </div>
 
-            <div class="qa-item">
-                <div class="qa-q qa-anim-q">Q. 10年後どうなっていたい？</div>
-                <div class="qa-a-box qa-anim-a">
-                    <div class="qa-row">
-                        <span class="qa-name">YUICHI</span>
-                        <p class="qa-text">「笑顔の絶えない家庭」<br>穏やかで温かい家庭を築きたいです。</p>
-                    </div>
-                    <div class="qa-row">
-                        <span class="qa-name">YUMA</span>
-                        <p class="qa-text">「毎年の記念日旅行」<br>10年後も二人で仲良く旅行に行けたら幸せです。</p>
+                <div class="qa-item">
+                    <div class="qa-q qa-anim-q">Q. 10年後どうなっていたい？</div>
+                    <div class="qa-a-box qa-anim-a">
+                        <div class="qa-row"><span class="qa-name">YUICHI</span><p class="qa-text">「笑顔の絶えない家庭」<br>穏やかで温かい家庭を築きたいです。</p></div>
+                        <div class="qa-row"><span class="qa-name">YUMA</span><p class="qa-text">「毎年の記念日旅行」<br>10年後も二人で仲良く旅行に行けたら幸せです。</p></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="scroll-section" style="padding: 60px 0; max-width: 100%;">
+    <section class="scroll-section">
         <h2>Our Journey<span class="jp-sub">これまでの歩み</span></h2>
-        <p style="text-align:center; font-size:0.8rem; margin-bottom:10px; color:#aaa;" class="content-hidden"><i class="fa-solid fa-arrows-left-right"></i> Swipe & Tap</p>
+        <p class="scroll-hint content-hidden"><i class="fa-solid fa-arrows-left-right"></i> Auto Scroll & Swipe</p>
 
-        <div class="journey-slider content-hidden">
-            <div class="g-card" onclick="openModal('2021', '出会った頃の写真。近場の公園でおしゃべりするのが一番の楽しみでした。', 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=600')">
-                <div class="g-img-box"><img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
-                <span class="g-year">2021</span><div class="g-text">出会った頃の写真。<br>公園デートが定番でした。</div>
-            </div>
-            <div class="g-card" onclick="openModal('2022', '初めての遠出旅行は京都へ。紅葉がとても綺麗で、二人で感動したのを覚えています。', 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=600')">
-                <div class="g-img-box"><img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
-                <span class="g-year">2022</span><div class="g-text">初めての旅行は京都へ。<br>紅葉に感動しました。</div>
-            </div>
-            <div class="g-card" onclick="openModal('2023', '二人の共通の趣味になったカフェ巡り。週末は美味しいコーヒーを求めて色々な街へ行きました。', 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=600')">
-                <div class="g-img-box"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
-                <span class="g-year">2023</span><div class="g-text">週末のカフェ巡り。<br>お気に入りの時間。</div>
-            </div>
-            <div class="g-card" onclick="openModal('2024', '記念日のプロポーズ。一生忘れられない、最高の瞬間になりました。', 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=600')">
-                <div class="g-img-box"><img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
-                <span class="g-year">2024</span><div class="g-text">プロポーズ。<br>一生忘れられない日に。</div>
-            </div>
-            <div class="g-card" onclick="openModal('2025', '結婚式の準備期間。前撮りでは少し緊張しましたが、カメラマンさんのおかげで笑顔になれました。', 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=600')">
-                <div class="g-img-box"><img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
-                <span class="g-year">2025</span><div class="g-text">結婚式の準備期間。<br>前撮りも良い思い出です。</div>
+        <div class="auto-scroll-container content-hidden" id="journey-slider">
+            <div class="auto-scroll-track">
+                <div class="g-card" onclick="openModal('2021', '出会った頃の写真。近場の公園でおしゃべりするのが一番の楽しみでした。', 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=600')">
+                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                    <span class="g-year">2021</span><div class="g-text">出会った頃の写真。<br>公園デートが定番でした。</div>
+                </div>
+                <div class="g-card" onclick="openModal('2022', '初めての遠出旅行は京都へ。紅葉がとても綺麗で、二人で感動したのを覚えています。', 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=600')">
+                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                    <span class="g-year">2022</span><div class="g-text">初めての旅行は京都へ。<br>紅葉に感動しました。</div>
+                </div>
+                <div class="g-card" onclick="openModal('2023', '二人の共通の趣味になったカフェ巡り。週末は美味しいコーヒーを求めて色々な街へ行きました。', 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=600')">
+                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                    <span class="g-year">2023</span><div class="g-text">週末のカフェ巡り。<br>お気に入りの時間。</div>
+                </div>
+                <div class="g-card" onclick="openModal('2024', '記念日のプロポーズ。一生忘れられない、最高の瞬間になりました。', 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=600')">
+                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                    <span class="g-year">2024</span><div class="g-text">プロポーズ。<br>一生忘れられない日に。</div>
+                </div>
+                <div class="g-card" onclick="openModal('2025', '結婚式の準備期間。前撮りでは少し緊張しましたが、カメラマンさんのおかげで笑顔になれました。', 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=600')">
+                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                    <span class="g-year">2025</span><div class="g-text">結婚式の準備期間。<br>前撮りも良い思い出です。</div>
+                </div>
             </div>
         </div>
     </section>
@@ -515,7 +483,7 @@
             if (audio.paused) {
                 audio.play();
                 bgmBtn.classList.add('playing');
-                bgmBtn.innerHTML = '<i class="fa-solid fa-compact-disc"></i>'; // レコードアイコンに変更
+                bgmBtn.innerHTML = '<i class="fa-solid fa-compact-disc"></i>';
             } else {
                 audio.pause();
                 bgmBtn.classList.remove('playing');
@@ -523,20 +491,59 @@
             }
         }
 
-        // --- 4. History Switch (Groom / Bride) ---
-        function switchHistory(target) {
-            const btns = document.querySelectorAll('.toggle-btn');
-            btns.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        // --- 4. ハイブリッド・オートスクロール（自動＋スワイプ） ---
+        let isModalOpen = false; // モーダル開閉状態のフラグ
+
+        function setupAutoScroll(containerId, speed) {
+            const container = document.getElementById(containerId);
+            if(!container) return;
+            const track = container.querySelector('.auto-scroll-track');
             
-            if(target === 'groom') {
-                document.getElementById('section-bride').style.display = 'none';
-                document.getElementById('section-groom').style.display = 'block';
-            } else {
-                document.getElementById('section-groom').style.display = 'none';
-                document.getElementById('section-bride').style.display = 'block';
+            // 無限ループ用に中身を複製
+            track.innerHTML += track.innerHTML;
+
+            let isTouching = false;
+            let startX, scrollLeft;
+
+            // マウスドラッグ対応（PC向けのおまけ機能）
+            container.addEventListener('mousedown', (e) => {
+                isTouching = true;
+                startX = e.pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
+            });
+            container.addEventListener('mouseleave', () => isTouching = false);
+            container.addEventListener('mouseup', () => isTouching = false);
+            container.addEventListener('mousemove', (e) => {
+                if(!isTouching) return;
+                e.preventDefault();
+                const x = e.pageX - container.offsetLeft;
+                const walk = (x - startX) * 2;
+                container.scrollLeft = scrollLeft - walk;
+            });
+
+            // スマホタッチ検知
+            container.addEventListener('touchstart', () => isTouching = true, {passive: true});
+            container.addEventListener('touchend', () => isTouching = false);
+
+            function scrollLoop() {
+                // ユーザーが触っていない ＆ モーダルが開いていない時だけ進む
+                if (!isTouching && !isModalOpen) {
+                    container.scrollLeft += speed;
+                    // 半分（複製した境目）まで進んだら、一瞬で最初に戻すことでシームレスループ
+                    if (container.scrollLeft >= track.scrollWidth / 2) {
+                        container.scrollLeft = 0;
+                    }
+                }
+                requestAnimationFrame(scrollLoop);
             }
+            requestAnimationFrame(scrollLoop);
         }
+
+        // 各スライダーに適用（数値はスピード：1.0が基本）
+        setupAutoScroll('groom-history', 1.0);
+        setupAutoScroll('bride-history', 1.0);
+        setupAutoScroll('journey-slider', 1.0);
+
 
         // --- 5. Scroll Animations ---
         const sections = document.querySelectorAll(".scroll-section");
@@ -548,7 +555,6 @@
                 const tl = gsap.timeline({ scrollTrigger: { trigger: section, start: "top 80%", toggleActions: "play none none reverse" } });
                 tl.fromTo(title, { autoAlpha: 0, scale: 0.8, y: 20 }, { autoAlpha: 1, scale: 1, y: 0, duration: 1.0, ease: "back.out(1.7)" });
 
-                // Q&Aリズム
                 if (section.classList.contains("qa-section-wrapper")) {
                     const items = section.querySelectorAll(".qa-item");
                     items.forEach((item) => {
@@ -563,21 +569,15 @@
             }
         });
 
-        // Time Table Line & Nodes Animation
+        // Time Table Line & Nodes
         gsap.to("#tt-active-line", {
             height: "100%", ease: "none",
             scrollTrigger: { trigger: ".tt-wrapper", start: "top 60%", end: "bottom 60%", scrub: 0.5 }
         });
-        
         const ttRows = document.querySelectorAll('.tt-trigger');
         ttRows.forEach(row => {
             const node = row.querySelector('.tt-node');
-            ScrollTrigger.create({
-                trigger: row,
-                start: "top 60%", // 線が到達したタイミングで発火
-                onEnter: () => node.classList.add('active'),
-                onLeaveBack: () => node.classList.remove('active')
-            });
+            ScrollTrigger.create({ trigger: row, start: "top 60%", onEnter: () => node.classList.add('active'), onLeaveBack: () => node.classList.remove('active') });
         });
 
         // --- 6. Modal ---
@@ -587,10 +587,14 @@
         const mText = document.getElementById('m-text');
         
         function openModal(title, text, src) {
+            isModalOpen = true; // モーダルが開いたら自動スクロールを一時停止
             mYear.innerText = title; mText.innerText = text; mImg.src = src;
             modal.classList.add('active');
         }
-        function closeModal() { modal.classList.remove('active'); }
+        function closeModal() { 
+            isModalOpen = false; // モーダルが閉じたら自動スクロール再開
+            modal.classList.remove('active'); 
+        }
     </script>
 </body>
 </html>
