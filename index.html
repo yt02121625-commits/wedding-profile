@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
-    
     <title>Wedding Profile | YUICHI & YUMA</title>
 
     <meta property="og:title" content="Wedding Profile | YUICHI & YUMA">
     <meta property="og:description" content="2026.06.20 私たちの結婚式のプロフィールサイトです">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://i.ibb.co/HLSjWFyW/2025-1220-11033800-1.jpg">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,12 +20,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <style>
-        /* --- Base Design (共通設定) --- */
+        /* --- Base Design --- */
         :root {
-            --bg-color: #f4f4f8; 
+            --bg-color: #fcfcfc; /* より明るく上品な白へ */
             --text-main: #333333;
             --text-gray: #888888;
             --accent-gold: #C5A059;
+            --gold-gradient: linear-gradient(135deg, #dfc282 0%, #C5A059 100%);
             --font-en: 'Cormorant Garamond', serif;
             --font-script: 'Great Vibes', cursive;
             --font-jp: 'Shippori Mincho', serif;
@@ -36,251 +36,161 @@
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: var(--font-body);
-            line-height: 1.8;
-            letter-spacing: 0.05em;
-            overflow-x: hidden;
-            width: 100%;
-            position: relative;
+            background-color: var(--bg-color); color: var(--text-main);
+            font-family: var(--font-body); line-height: 1.8; letter-spacing: 0.05em;
+            overflow-x: hidden; width: 100%; position: relative;
         }
 
-        /* 背景の花柄 */
+        /* --- 背景・桜 --- */
         .bg-pattern {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('https://images.unsplash.com/photo-1596395719912-70659630c82f?q=80&w=2000&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.04;
-            z-index: -2;
-            filter: grayscale(100%) contrast(120%);
-            pointer-events: none;
+            background-size: cover; background-position: center;
+            opacity: 0.03; z-index: -2; filter: grayscale(100%) contrast(120%);
         }
+        #sakura-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
+        .sakura-petal { position: absolute; top: -50px; background-color: #ffd1dc; width: 12px; height: 18px; border-radius: 15px 0px 15px 0px; opacity: 0.6; will-change: transform; }
 
-        /* --- 桜のアニメーション用スタイル --- */
-        #sakura-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            overflow: hidden;
-        }
-        .sakura-petal {
-            position: absolute;
-            top: -50px;
-            background-color: #ffd1dc;
-            width: 12px; height: 18px;
-            border-radius: 15px 0px 15px 0px;
-            opacity: 0.7;
-            will-change: transform; /* スマホ描画パフォーマンス向上 */
-        }
-
-        /* --- タイトル & コンテンツ (初期状態) --- */
         h2 {
-            font-family: var(--font-en);
-            font-size: 2.2rem;
-            text-align: center;
-            margin-bottom: 50px;
-            color: var(--accent-gold);
-            font-weight: 400;
-            opacity: 0; /* JSで表示 */
-            visibility: hidden;
+            font-family: var(--font-en); font-size: 2.5rem; text-align: center; margin-bottom: 50px;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 600; opacity: 0; visibility: hidden;
         }
-        
-        .jp-sub {
-            display: block; font-family: var(--font-jp); font-size: 0.85rem;
-            color: var(--text-gray); margin-top: 5px; letter-spacing: 0.15em;
-        }
-
+        .jp-sub { display: block; font-family: var(--font-jp); font-size: 0.85rem; -webkit-text-fill-color: var(--text-gray); margin-top: 5px; letter-spacing: 0.2em; }
         section { padding: 80px 20px; max-width: 900px; margin: 0 auto; position: relative; }
         img { width: 100%; height: auto; display: block; object-fit: cover; }
+        .content-hidden { opacity: 0; transform: translateY(30px); visibility: hidden; }
 
-        /* コンテンツ部分の初期非表示クラス */
-        .content-hidden {
-            opacity: 0;
-            transform: translateY(30px);
-            visibility: hidden;
-        }
-
-        /* =========================================
-           PART 1: Top ~ Timeline
-           ========================================= */
-
-        /* --- Hero Slideshow --- */
-        .hero {
-            height: 100vh; position: relative; overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-            /* スマホのURLバーを考慮した高さ調整 */
-            height: 100svh; 
-        }
-        .hero-slide {
-            position: absolute; inset: 0;
-            background-size: cover; background-position: center;
-            opacity: 0; animation: slideShow 18s infinite;
-        }
+        /* --- Hero --- */
+        .hero { height: 100svh; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; animation: slideShow 18s infinite; }
         .slide-1 { background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200'); animation-delay: 0s; }
         .slide-2 { background-image: url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=1200'); animation-delay: 6s; }
         .slide-3 { background-image: url('https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=1200'); animation-delay: 12s; }
-
-        @keyframes slideShow {
-            0% { opacity: 0; transform: scale(1.05); }
-            5% { opacity: 1; }
-            33% { opacity: 1; }
-            38% { opacity: 0; transform: scale(1.0); }
-            100% { opacity: 0; }
-        }
-
-        .hero-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.4); z-index: 1; }
+        @keyframes slideShow { 0% { opacity: 0; transform: scale(1.05); } 5% { opacity: 1; } 33% { opacity: 1; } 38% { opacity: 0; transform: scale(1.0); } 100% { opacity: 0; } }
+        .hero-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.3); z-index: 1; }
         .hero-content { position: relative; z-index: 2; text-align: center; padding: 0 20px; width: 100%; }
-        
-        .hero-title-svg { width: 100%; height: 100px; display: block; margin: 10px auto; overflow: visible; }
-        .hero-title-text {
-            font-family: var(--font-script); font-size: 3.8rem; text-anchor: middle; dominant-baseline: middle;
-            fill: rgba(68, 68, 68, 0); stroke: #444; stroke-width: 1px; stroke-dasharray: 2000; stroke-dashoffset: 2000;
-        }
-        
-        .hero-subtitle {
-            font-family: var(--font-en); font-size: 1.2rem; letter-spacing: 0.1em;
-            color: #555; display: block; margin-bottom: 10px; opacity: 0;
-        }
-        .hero-date { 
-            font-family: var(--font-en); font-size: 1.1rem; letter-spacing: 0.3em; 
-            color: #666; opacity: 0;
-        }
+        .hero-title-svg { width: 100%; height: 120px; display: block; margin: 10px auto; overflow: visible; }
+        .hero-title-text { font-family: var(--font-script); font-size: 4.5rem; text-anchor: middle; dominant-baseline: middle; fill: rgba(68, 68, 68, 0); stroke: #444; stroke-width: 1px; stroke-dasharray: 2000; stroke-dashoffset: 2000; }
+        .hero-subtitle { font-family: var(--font-en); font-size: 1.2rem; letter-spacing: 0.1em; color: #555; display: block; margin-bottom: 5px; opacity: 0; }
+        .hero-date { font-family: var(--font-en); font-size: 1.1rem; letter-spacing: 0.3em; color: #666; opacity: 0; }
 
         /* --- Greeting --- */
         .greeting-layout { display: flex; flex-direction: column; align-items: center; gap: 40px; }
-        .greeting-img-row { display: flex; justify-content: center; gap: 20px; width: 100%; max-width: 600px; }
-        .greeting-photo { width: 45%; border-radius: 2px; box-shadow: 10px 10px 0 rgba(197, 160, 89, 0.2); }
-        .greeting-text { font-family: var(--font-jp); text-align: center; line-height: 2.4; }
+        .greeting-img-row { display: flex; justify-content: center; gap: 15px; width: 100%; max-width: 600px; }
+        .greeting-photo { width: 48%; border-radius: 4px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        .greeting-text { font-family: var(--font-jp); text-align: center; line-height: 2.4; font-size: 0.95rem; }
 
-        /* --- Timeline --- */
-        .timeline-container { position: relative; padding: 40px 0; }
-        .timeline-line {
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 1px; height: 0%; background: var(--accent-gold); z-index: 0;
+        /* --- 新Time Table (左軸・光のノード) --- */
+        .tt-wrapper { position: relative; padding: 20px 0 20px 30px; max-width: 500px; margin: 0 auto; }
+        .tt-line { position: absolute; top: 0; left: 10px; width: 1px; height: 100%; background: #eee; z-index: 0; }
+        .tt-line-active { position: absolute; top: 0; left: 10px; width: 2px; height: 0%; background: var(--gold-gradient); z-index: 1; }
+        
+        .tt-row { position: relative; z-index: 2; margin-bottom: 50px; display: flex; align-items: center; justify-content: space-between; }
+        .tt-row:last-child { margin-bottom: 0; }
+        
+        .tt-node {
+            position: absolute; left: -26px; width: 12px; height: 12px; border-radius: 50%;
+            background: #fff; border: 2px solid #ddd; transition: all 0.5s ease;
         }
-        .timeline-row {
-            position: relative; z-index: 1; margin-bottom: 60px;
-            display: flex; flex-direction: column; align-items: center; text-align: center;
+        .tt-node.active {
+            background: var(--accent-gold); border-color: var(--accent-gold);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.8);
+            animation: popBubble 0.6s ease-out forwards;
         }
-        .t-icon {
-            font-size: 2.2rem; color: var(--accent-gold); background: var(--bg-color);
-            padding: 10px; margin-bottom: 10px;
-        }
-        .t-time { font-family: var(--font-en); font-size: 1.2rem; font-weight: bold; color: var(--text-gray); }
-        .t-title { font-family: var(--font-jp); font-size: 1.1rem; font-weight: 500; margin: 5px 0; }
-        .atmosphere-img {
-            width: 150px; height: 150px; object-fit: cover; border-radius: 50%;
-            margin: 15px auto; border: 1px solid #eee; padding: 5px; background: #fff;
-        }
+        @keyframes popBubble { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
+
+        .tt-content { flex: 1; padding-right: 15px; }
+        .tt-time { font-family: var(--font-en); font-size: 1.3rem; color: var(--accent-gold); font-weight: 600; letter-spacing: 0.05em; line-height: 1; margin-bottom: 5px; }
+        .tt-title { font-family: var(--font-jp); font-size: 1.1rem; font-weight: 500; color: var(--text-main); }
+        .tt-desc { font-size: 0.8rem; color: var(--text-gray); margin-top: 2px; }
+        
+        .tt-img-box { width: 90px; height: 90px; flex-shrink: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transform: rotate(2deg); }
+        .tt-img-box img { width: 100%; height: 100%; object-fit: cover; }
 
         /* --- Menu --- */
-        .menu-container {
-            max-width: 500px; margin: 0 auto; text-align: center;
-            background: rgba(255, 255, 255, 0.7); padding: 50px 20px;
-            border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            border: 1px solid rgba(197, 160, 89, 0.2);
-        }
+        .menu-container { max-width: 500px; margin: 0 auto; text-align: center; background: rgba(255, 255, 255, 0.8); padding: 50px 20px; border-radius: 8px; box-shadow: 0 10px 40px rgba(197, 160, 89, 0.08); border: 1px solid rgba(197, 160, 89, 0.15); }
         .menu-item { margin-bottom: 30px; }
-        .menu-item:last-child { margin-bottom: 0; }
-        .menu-title {
-            font-family: var(--font-en); color: var(--accent-gold);
-            font-size: 1.3rem; letter-spacing: 0.1em; margin-bottom: 8px;
-        }
-        .menu-desc {
-            font-family: var(--font-jp); font-size: 0.95rem;
-            color: var(--text-main); line-height: 1.6;
-        }
+        .menu-title { font-family: var(--font-en); color: var(--accent-gold); font-size: 1.4rem; letter-spacing: 0.1em; margin-bottom: 5px; }
+        .menu-desc { font-family: var(--font-jp); font-size: 0.95rem; color: var(--text-main); line-height: 1.6; }
 
-        /* =========================================
-           PART 2: Profile ~ End
-           ========================================= */
-
-        /* --- Profile --- */
-        .profile-container { display: flex; flex-direction: column; gap: 60px; max-width: 800px; margin: 0 auto; }
+        /* --- Profile & History --- */
+        .profile-container { display: flex; flex-direction: column; gap: 40px; max-width: 800px; margin: 0 auto; }
         .profile-card { text-align: center; }
-        
-        .p-content-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
-        .p-label {
-            font-family: var(--font-en); font-size: 1.3rem; color: var(--accent-gold);
-            letter-spacing: 0.1em; margin-bottom: 15px; font-weight: 600;
-        }
-        .p-photo { 
-            width: 180px; height: 180px; object-fit: cover; border-radius: 50%;
-            border: 1px solid #eee; padding: 5px; background: #fff; margin-bottom: 15px;
-        }
-        .p-name {
-            font-family: var(--font-en); font-size: 1.5rem; letter-spacing: 0.1em;
-            color: var(--text-main); font-weight: 500;
-        }
+        .p-photo { width: 160px; height: 160px; object-fit: cover; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .p-name { font-family: var(--font-en); font-size: 1.6rem; letter-spacing: 0.1em; color: var(--text-main); font-weight: 600; }
+        .p-table { width: 100%; max-width: 320px; margin: 15px auto 0; font-size: 0.9rem; text-align: left; border-collapse: collapse; }
+        .p-table th { color: var(--accent-gold); font-weight: normal; padding: 10px 0; width: 35%; border-bottom: 1px dashed #ddd; font-family: var(--font-en); font-size: 1.1rem;}
+        .p-table td { padding: 10px 0; border-bottom: 1px dashed #ddd; }
 
-        .p-table {
-            width: 100%; max-width: 340px; margin: 10px auto 0;
-            font-size: 0.9rem; text-align: left; border-collapse: collapse;
+        /* History Toggle & Slider */
+        .history-section { margin-top: 60px; }
+        .toggle-wrap { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        .toggle-btn {
+            background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold);
+            padding: 8px 30px; border-radius: 30px; font-family: var(--font-en); font-size: 1.2rem;
+            cursor: pointer; transition: all 0.3s ease; outline: none;
         }
-        .p-table th { color: #999; font-weight: normal; padding: 8px 0; width: 30%; border-bottom: 1px solid #eee; }
-        .p-table td { padding: 8px 0; border-bottom: 1px solid #eee; }
+        .toggle-btn.active { background: var(--gold-gradient); color: #fff; box-shadow: 0 5px 15px rgba(197, 160, 89, 0.4); border-color: transparent; }
+        
+        .history-slider-wrap { position: relative; width: 100%; }
+        .history-slider {
+            display: none; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; padding: 10px 20px 40px; gap: 20px;
+        }
+        .history-slider.active { display: flex; animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* スクロールバー非表示 */
+        .history-slider::-webkit-scrollbar, .journey-slider::-webkit-scrollbar { display: none; }
+        .history-slider, .journey-slider { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .h-card, .g-card {
+            min-width: 75vw; max-width: 300px; scroll-snap-align: center; flex-shrink: 0;
+            background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+            cursor: pointer;
+        }
+        .h-img-box, .g-img-box { width: 100%; height: 200px; border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
+        .h-img, .g-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .h-card:hover .h-img, .g-card:hover .g-img { transform: scale(1.05); }
+        
+        .h-phase { font-family: var(--font-script); font-size: 2rem; color: var(--accent-gold); line-height: 1; }
+        .h-jp { font-size: 0.75rem; color: #aaa; margin-bottom: 8px; letter-spacing: 0.1em; }
+        .h-text, .g-text { font-size: 0.85rem; color: var(--text-main); line-height: 1.6; }
 
         /* --- Q&A --- */
-        .qa-section { padding: 20px 0; margin-top: 10px; }
-        .qa-item { margin-bottom: 60px; text-align: center; }
-        
-        .qa-q {
-            font-family: var(--font-en); color: var(--accent-gold); font-size: 1.15rem;
-            display: inline-block; margin-bottom: 30px; letter-spacing: 0.05em; position: relative;
-        }
-        .qa-q::after {
-            content: ''; display: block; width: 30px; height: 1px; background: var(--accent-gold);
-            margin: 8px auto 0;
-        }
-
-        .qa-a-box { 
-            background: transparent; padding: 0 10px; max-width: 600px; margin: 0 auto; text-align: left; 
-        }
-        .qa-row { margin-bottom: 25px; }
-
-        .qa-name { 
-            font-size: 0.8rem; color: #bbb; font-family: var(--font-en); letter-spacing: 0.1em;
-            margin-right: 8px; display: inline-block;
-        }
-        .qa-text { font-size: 0.95rem; line-height: 1.8; color: #444; display: inline; }
-
+        .qa-item { margin-bottom: 50px; text-align: center; }
+        .qa-q { font-family: var(--font-jp); color: var(--accent-gold); font-size: 1.1rem; display: inline-block; margin-bottom: 20px; letter-spacing: 0.05em; font-weight: 500;}
+        .qa-a-box { background: #fff; padding: 25px 20px; border-radius: 8px; max-width: 600px; margin: 0 auto; text-align: left; box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
+        .qa-row { margin-bottom: 20px; border-left: 2px solid var(--accent-gold); padding-left: 15px;}
+        .qa-row:last-child { margin-bottom: 0; }
+        .qa-name { font-size: 0.9rem; color: var(--accent-gold); font-family: var(--font-en); letter-spacing: 0.1em; display: block; margin-bottom: 5px; font-weight: 600;}
+        .qa-text { font-size: 0.95rem; line-height: 1.7; color: #444; }
         .qa-anim-q, .qa-anim-a { opacity: 0; transform: translateY(20px); visibility: hidden; }
 
-        .qa-images-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
-        .qa-grid-img { border-radius: 4px; height: 160px; object-fit: cover; width: 100%; filter: sepia(10%); }
+        /* --- Our Journey (Swipeable) --- */
+        .journey-slider { display: flex; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 10px 20px 40px; gap: 20px; }
+        .g-year { font-family: var(--font-en); color: var(--accent-gold); font-size: 1.4rem; display: block; font-weight: 600;}
 
-        /* --- Gallery --- */
-        .gallery-wrap { width: 100%; overflow: hidden; padding: 30px 0; background: transparent; }
-        .marquee-wrapper { display: flex; width: fit-content; }
-        
-        .gallery-card { width: 240px; margin-right: 20px; flex-shrink: 0; cursor: pointer; }
-        .g-img-box {
-            width: 100%; height: 180px; overflow: hidden; border-radius: 4px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 12px;
-        }
-        .g-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-        .gallery-card:hover .g-img { transform: scale(1.05); }
-        
-        .g-caption { text-align: left; padding: 0 5px; }
-        .g-year { font-family: var(--font-en); color: var(--accent-gold); font-size: 1.1rem; display: block; }
-        .g-text { font-size: 0.85rem; color: #666; line-height: 1.5; }
+        /* --- Footer & Modal & BGM --- */
+        footer { text-align:center; padding:60px 20px 100px; color:#aaa; font-size:0.8rem; font-family:var(--font-en); }
 
-        /* --- Footer & Modal --- */
-        footer { text-align:center; padding:60px 20px 50px; color:#aaa; font-size:0.8rem; background:transparent; font-family:var(--font-en); }
-
-        #modal {
-            position: fixed; inset: 0; background: rgba(255,255,255,0.97); z-index: 9999;
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 0.3s; padding: 20px;
-        }
+        #modal { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; padding: 20px; backdrop-filter: blur(5px); }
         #modal.active { display: flex; opacity: 1; }
-        .modal-img { max-width: 100%; max-height: 60vh; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .modal-content { max-width: 500px; text-align: center; margin-top: 20px; }
+        .modal-img { max-width: 100%; max-height: 50vh; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+        .modal-content { max-width: 500px; text-align: center; margin-top: 25px; }
         .close-btn { position: absolute; top: 20px; right: 25px; font-size: 2.5rem; color: #333; cursor: pointer; }
+
+        /* BGM Button */
+        .bgm-btn {
+            position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px;
+            background: #fff; border-radius: 50%; box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
+            display: flex; justify-content: center; align-items: center; z-index: 9000;
+            color: var(--accent-gold); font-size: 1.2rem; cursor: pointer; border: 2px solid var(--accent-gold);
+            transition: all 0.3s ease;
+        }
+        .bgm-btn.playing { background: var(--gold-gradient); color: #fff; border-color: transparent; animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
     </style>
 </head>
@@ -288,6 +198,11 @@
 
     <div class="bg-pattern"></div>
     <div id="sakura-container"></div>
+
+    <audio id="bgm-audio" loop src="https://assets.mixkit.co/music/preview/mixkit-romantic-wedding-piano-136.mp3"></audio>
+    <div class="bgm-btn" id="bgm-toggle" onclick="toggleBGM()">
+        <i class="fa-solid fa-music"></i>
+    </div>
 
     <div class="hero">
         <div class="hero-slide slide-1"></div>
@@ -307,132 +222,165 @@
         <h2>Greeting<span class="jp-sub">ご挨拶</span></h2>
         <div class="greeting-layout content-hidden">
             <div class="greeting-text">
-                <p>
-                    本日はご多用の中<br>
-                    私たちの結婚式にご列席いただき<br>
-                    誠にありがとうございます
-                </p>
-                <p>    
-                    皆様に見守られ<br>
-                    今日という日を迎えられたことを<br>
-                    心より感謝申し上げます
-                </p>
+                <p>本日はご多用の中<br>私たちの結婚式にご列席いただき<br>誠にありがとうございます</p>
+                <p>皆様に見守られ<br>今日という日を迎えられたことを<br>心より感謝申し上げます</p>
             </div>
             <div class="greeting-img-row">
-                <img src="https://i.ibb.co/HLSjWFyW/2025-1220-11033800-1.jpg" class="greeting-photo" alt="Couple 1">
-                <img src="https://i.ibb.co/tM22S282/2025-1220-11021400-1.jpg" class="greeting-photo" style="margin-top: 30px;" alt="Couple 2">
+                <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=400" class="greeting-photo">
+                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400" class="greeting-photo" style="margin-top: 30px;">
             </div>
         </div>
     </section>
 
     <section class="scroll-section">
         <h2>Time Table<span class="jp-sub">本日の流れ</span></h2>
-        <div class="timeline-container">
-            <div class="timeline-line"></div>
+        <div class="tt-wrapper content-hidden">
+            <div class="tt-line"></div>
+            <div class="tt-line-active" id="tt-active-line"></div>
 
-            <div class="timeline-row content-hidden">
-                <div class="t-icon"><i class="fa-solid fa-church"></i></div>
-                <span class="t-time">11:00</span>
-                <h3 class="t-title">Ceremony</h3>
-                <p style="font-size:0.9rem; color:#888;">挙式</p>
+            <div class="tt-row tt-trigger">
+                <div class="tt-node"></div>
+                <div class="tt-content">
+                    <div class="tt-time">11:00</div>
+                    <div class="tt-title">Ceremony</div>
+                    <div class="tt-desc">挙式</div>
+                </div>
+                <div class="tt-img-box"><img src="https://images.unsplash.com/photo-1544078751-58fee2d8a03b?auto=format&fit=crop&q=80&w=200"></div>
             </div>
 
-            <div class="timeline-row content-hidden">
-                <img src="https://images.unsplash.com/photo-1544078751-58fee2d8a03b?auto=format&fit=crop&q=80&w=300" class="atmosphere-img" alt="Chapel">
+            <div class="tt-row tt-trigger">
+                <div class="tt-node"></div>
+                <div class="tt-content">
+                    <div class="tt-time">11:45</div>
+                    <div class="tt-title">Welcome Party</div>
+                    <div class="tt-desc">ガーデンにて乾杯</div>
+                </div>
+                <div class="tt-img-box" style="transform: rotate(-3deg);"><img src="https://images.unsplash.com/photo-1605658639599-2313d4b6db2b?auto=format&fit=crop&q=80&w=200"></div>
             </div>
 
-            <div class="timeline-row content-hidden">
-                <div class="t-icon"><i class="fa-solid fa-champagne-glasses"></i></div>
-                <span class="t-time">11:45</span>
-                <h3 class="t-title">Welcome Party</h3>
-                <p style="font-size:0.9rem; color:#888;">ガーデンにて乾杯</p>
-            </div>
-
-            <div class="timeline-row content-hidden">
-                <img src="https://images.unsplash.com/photo-1605658639599-2313d4b6db2b?auto=format&fit=crop&q=80&w=300" class="atmosphere-img" alt="Rings">
-            </div>
-
-            <div class="timeline-row content-hidden">
-                <div class="t-icon"><i class="fa-solid fa-utensils"></i></div>
-                <span class="t-time">12:30</span>
-                <h3 class="t-title">Reception</h3>
-                <p style="font-size:0.9rem; color:#888;">披露宴開宴</p>
+            <div class="tt-row tt-trigger">
+                <div class="tt-node"></div>
+                <div class="tt-content">
+                    <div class="tt-time">12:30</div>
+                    <div class="tt-title">Reception</div>
+                    <div class="tt-desc">披露宴開宴</div>
+                </div>
+                <div class="tt-img-box"><img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=200"></div>
             </div>
         </div>
     </section>
 
     <section class="scroll-section">
         <h2>Menu<span class="jp-sub">お食事</span></h2>
-        
         <div class="menu-container content-hidden">
-            <div class="menu-item">
-                <div class="menu-title">Amuse</div>
-                <div class="menu-desc">季節の小さなオードブル</div>
-            </div>
-            
-            <div class="menu-item">
-                <div class="menu-title">Appetizer</div>
-                <div class="menu-desc">海の幸のマリネと彩り野菜のテリーヌ<br>キャビアを添えて</div>
-            </div>
-            
-            <div class="menu-item">
-                <div class="menu-title">Soup</div>
-                <div class="menu-desc">季節野菜のポタージュ</div>
-            </div>
-            
-            <div class="menu-item">
-                <div class="menu-title">Fish</div>
-                <div class="menu-desc">真鯛のポワレ 白ワインソース</div>
-            </div>
-            
-            <div class="menu-item">
-                <div class="menu-title">Meat</div>
-                <div class="menu-desc">国産牛フィレ肉のロースト<br>トリュフ香るソース・ペリグー</div>
-            </div>
-            
-            <div class="menu-item">
-                <div class="menu-title">Dessert</div>
-                <div class="menu-desc">パティシエ特製ウエディングケーキと<br>季節のフルーツ</div>
-            </div>
-            
-            <div class="menu-item" style="margin-top: 40px;">
-                <div class="menu-desc" style="font-size: 0.85rem; color: #777;">
-                    パン / コーヒー または 紅茶
-                </div>
-            </div>
+            <div class="menu-item"><div class="menu-title">Amuse</div><div class="menu-desc">季節の小さなオードブル</div></div>
+            <div class="menu-item"><div class="menu-title">Appetizer</div><div class="menu-desc">海の幸のマリネと彩り野菜のテリーヌ<br>キャビアを添えて</div></div>
+            <div class="menu-item"><div class="menu-title">Soup</div><div class="menu-desc">季節野菜のポタージュ</div></div>
+            <div class="menu-item"><div class="menu-title">Fish</div><div class="menu-desc">真鯛のポワレ 白ワインソース</div></div>
+            <div class="menu-item"><div class="menu-title">Meat</div><div class="menu-desc">国産牛フィレ肉のロースト<br>トリュフ香るソース・ペリグー</div></div>
+            <div class="menu-item"><div class="menu-title">Dessert</div><div class="menu-desc">特製ウエディングケーキと季節のフルーツ</div></div>
         </div>
     </section>
 
     <section class="scroll-section">
-        <h2>Profile<span class="jp-sub">二人について</span></h2>
+        <h2>Profile & History<span class="jp-sub">生い立ち</span></h2>
         
-        <div class="profile-container">
-            <div class="profile-card content-hidden">
-                <div class="p-content-wrap">
-                    <div class="p-label">GROOM</div>
-                    <img src="https://i.ibb.co/6cFH6V0H/IMG-5410.jpg" class="p-photo" alt="Groom">
-                    <div class="p-name">YUICHI</div>
-                </div>
-                <table class="p-table">
-                    <tr><th>Birth</th><td>1997.12.25</td></tr>
-                    <tr><th>Home</th><td>愛知県 稲沢市</td></tr>
-                    <tr><th>Type</th><td>B型</td></tr>
-                    <tr><th>Hobby</th><td>サウナ、ジム</td></tr>
-                </table>
+        <div class="profile-container content-hidden">
+            <div class="toggle-wrap">
+                <button class="toggle-btn active" onclick="switchHistory('groom')">YUICHI</button>
+                <button class="toggle-btn" onclick="switchHistory('bride')">YUMA</button>
             </div>
 
-            <div class="profile-card content-hidden">
-                <div class="p-content-wrap">
-                    <div class="p-label">BRIDE</div>
-                    <img src="https://i.ibb.co/TBWYQSpT/716c8c42f420a140d760c98077118fe0.jpg" class="p-photo" alt="Bride">
-                    <div class="p-name">YUMA</div>
+            <div id="section-groom" class="history-slider-wrap">
+                <div class="profile-card">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=300" class="p-photo">
+                    <div class="p-name">YUICHI</div>
+                    <table class="p-table">
+                        <tr><th>Birth</th><td>1997.12.25</td></tr>
+                        <tr><th>Home</th><td>愛知県 稲沢市</td></tr>
+                        <tr><th>Type</th><td>B型</td></tr>
+                        <tr><th>Hobby</th><td>サウナ、ジム</td></tr>
+                    </table>
                 </div>
-                <table class="p-table">
-                    <tr><th>Birth</th><td>1999.02.16</td></tr>
-                    <tr><th>Home</th><td>北海道 札幌市</td></tr>
-                    <tr><th>Type</th><td>A型</td></tr>
-                    <tr><th>Hobby</th><td>ピラティス、美味しいご飯を食べること</td></tr>
-                </table>
+                
+                <p style="text-align:center; font-size:0.8rem; margin:20px 0 10px; color:#aaa;"><i class="fa-solid fa-arrows-left-right"></i> Swipe & Tap</p>
+                
+                <div class="history-slider active">
+                    <div class="h-card" onclick="openModal('Genesis', '誕生。よく泣き、よく笑う元気な赤ちゃんでした。', 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">Genesis</div><div class="h-jp">生まれたて</div><div class="h-text">誕生。元気な赤ちゃんでした。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('First Steps', '保育園時代。毎日泥だらけになって遊んでいました。', 'https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">First Steps</div><div class="h-jp">保育園</div><div class="h-text">毎日泥だらけになって遊んでいました。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('Discovery', '小学校時代。野球に出会い、スポーツの楽しさを知りました。', 'https://images.unsplash.com/photo-1508344928928-7137b29de216?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1508344928928-7137b29de216?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">Discovery</div><div class="h-jp">小学校</div><div class="h-text">スポーツの楽しさを知りました。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('Awakening', '中学校時代。部活と勉強の両立に励んだ3年間です。', 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">Awakening</div><div class="h-jp">中学校</div><div class="h-text">部活と勉強の両立に励みました。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('Youthful Days', '高校時代。一生の友人と出会い、青春を謳歌しました。', 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">Youthful Days</div><div class="h-jp">高校</div><div class="h-text">一生の友人と出会えた青春時代。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('Exploration', '大学時代。サークル活動や旅行で多くの経験をしました。', 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">Exploration</div><div class="h-jp">大学</div><div class="h-text">旅行やサークルで世界が広がりました。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('New Chapter', '社会人へ。責任とやりがいを感じる日々がスタート。', 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">New Chapter</div><div class="h-jp">社会人</div><div class="h-text">新しい挑戦と責任の始まりです。</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-bride" class="history-slider-wrap" style="display: none;">
+                <div class="profile-card">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300" class="p-photo">
+                    <div class="p-name">YUMA</div>
+                    <table class="p-table">
+                        <tr><th>Birth</th><td>1999.02.16</td></tr>
+                        <tr><th>Home</th><td>北海道 札幌市</td></tr>
+                        <tr><th>Type</th><td>A型</td></tr>
+                        <tr><th>Hobby</th><td>ピラティス、カフェ巡り</td></tr>
+                    </table>
+                </div>
+                
+                <p style="text-align:center; font-size:0.8rem; margin:20px 0 10px; color:#aaa;"><i class="fa-solid fa-arrows-left-right"></i> Swipe & Tap</p>
+                
+                <div class="history-slider active">
+                    <div class="h-card" onclick="openModal('Genesis', '誕生。雪の降る札幌で生まれました。', 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">Genesis</div><div class="h-jp">生まれたて</div><div class="h-text">雪の降る札幌で生まれました。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('First Steps', '保育園時代。お絵かきが大好きな女の子でした。', 'https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1503454537195-1dc534b36f61?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">First Steps</div><div class="h-jp">保育園</div><div class="h-text">お絵かきが大好きな女の子でした。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('Discovery', '小学校時代。ピアノを習い始め、音楽に触れました。', 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">Discovery</div><div class="h-jp">小学校</div><div class="h-text">ピアノを習い始めました。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('Awakening', '中学校時代。素敵な友人たちに恵まれました。', 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">Awakening</div><div class="h-jp">中学校</div><div class="h-text">素敵な友人たちとの出会い。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('Youthful Days', '高校時代。勉強も遊びも全力で楽しんだ思い出です。', 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">Youthful Days</div><div class="h-jp">高校</div><div class="h-text">何事にも全力で取り組んだ日々。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('Exploration', '大学時代。上京し、新しい価値観にたくさん触れました。', 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">Exploration</div><div class="h-jp">大学</div><div class="h-text">上京し、新しい刺激を受けた日々。</div>
+                    </div>
+                    <div class="h-card" onclick="openModal('New Chapter', '社会人へ。仕事を通じて自分を磨く毎日です。', 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=600')">
+                        <div class="h-img-box"><img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=400" class="h-img"></div>
+                        <div class="h-phase">New Chapter</div><div class="h-jp">社会人</div><div class="h-text">仕事を通じて成長していく毎日。</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -445,11 +393,11 @@
                 <div class="qa-q qa-anim-q">Q. お互いの第一印象は？</div>
                 <div class="qa-a-box qa-anim-a">
                     <div class="qa-row">
-                        <span class="qa-name">YUICHI &rsaquo;</span>
+                        <span class="qa-name">YUICHI</span>
                         <p class="qa-text">笑顔が素敵で、周りをパッと明るくする人だなと思いました。</p>
                     </div>
                     <div class="qa-row">
-                        <span class="qa-name">YUMA &rsaquo;</span>
+                        <span class="qa-name">YUMA</span>
                         <p class="qa-text">誠実そうで、声が素敵だなと思いました。</p>
                     </div>
                 </div>
@@ -459,11 +407,11 @@
                 <div class="qa-q qa-anim-q">Q. 相手の影響で好きになったもの</div>
                 <div class="qa-a-box qa-anim-a">
                     <div class="qa-row">
-                        <span class="qa-name">YUICHI &rsaquo;</span>
+                        <span class="qa-name">YUICHI</span>
                         <p class="qa-text">「コーヒー」<br>彼女と飲む休日のコーヒーが日課になりました。</p>
                     </div>
                     <div class="qa-row">
-                        <span class="qa-name">YUMA &rsaquo;</span>
+                        <span class="qa-name">YUMA</span>
                         <p class="qa-text">「カフェ巡り」<br>休日は二人で美味しいコーヒーを求めて出かけます。</p>
                     </div>
                 </div>
@@ -473,85 +421,57 @@
                 <div class="qa-q qa-anim-q">Q. 10年後どうなっていたい？</div>
                 <div class="qa-a-box qa-anim-a">
                     <div class="qa-row">
-                        <span class="qa-name">YUICHI &rsaquo;</span>
+                        <span class="qa-name">YUICHI</span>
                         <p class="qa-text">「笑顔の絶えない家庭」<br>穏やかで温かい家庭を築きたいです。</p>
                     </div>
                     <div class="qa-row">
-                        <span class="qa-name">YUMA &rsaquo;</span>
+                        <span class="qa-name">YUMA</span>
                         <p class="qa-text">「毎年の記念日旅行」<br>10年後も二人で仲良く旅行に行けたら幸せです。</p>
                     </div>
                 </div>
-            </div>
-
-            <div class="qa-images-grid content-hidden">
-                <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&q=80&w=300" class="qa-grid-img">
-                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=300" class="qa-grid-img">
             </div>
         </div>
     </section>
 
     <section class="scroll-section" style="padding: 60px 0; max-width: 100%;">
         <h2>Our Journey<span class="jp-sub">これまでの歩み</span></h2>
-        <p style="text-align:center; font-size:0.8rem; margin-bottom:20px; color:#999;" class="content-hidden">
-            <i class="fa-solid fa-arrow-right"></i> Scroll & Tap Photo
-        </p>
+        <p style="text-align:center; font-size:0.8rem; margin-bottom:10px; color:#aaa;" class="content-hidden"><i class="fa-solid fa-arrows-left-right"></i> Swipe & Tap</p>
 
-        <div class="gallery-wrap content-hidden">
-            <div class="marquee-wrapper" id="marquee">
-                <div class="gallery-card" onclick="openModal('2021', '出会った頃の写真。近場の公園でおしゃべりするのが一番の楽しみでした。', 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=600')">
-                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
-                    <div class="g-caption">
-                        <span class="g-year">2021</span>
-                        <div class="g-text">出会った頃の写真。<br>公園デートが定番でした。</div>
-                    </div>
-                </div>
-
-                <div class="gallery-card" onclick="openModal('2022', '初めての遠出旅行は京都へ。紅葉がとても綺麗で、二人で感動したのを覚えています。', 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=600')">
-                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
-                    <div class="g-caption">
-                        <span class="g-year">2022</span>
-                        <div class="g-text">初めての旅行は京都へ。<br>紅葉に感動しました。</div>
-                    </div>
-                </div>
-
-                <div class="gallery-card" onclick="openModal('2023', '二人の共通の趣味になったカフェ巡り。週末は美味しいコーヒーを求めて色々な街へ行きました。', 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=600')">
-                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
-                    <div class="g-caption">
-                        <span class="g-year">2023</span>
-                        <div class="g-text">週末のカフェ巡り。<br>お気に入りの時間。</div>
-                    </div>
-                </div>
-
-                <div class="gallery-card" onclick="openModal('2024', '記念日のプロポーズ。一生忘れられない、最高の瞬間になりました。', 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=600')">
-                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
-                    <div class="g-caption">
-                        <span class="g-year">2024</span>
-                        <div class="g-text">プロポーズ。<br>一生忘れられない日に。</div>
-                    </div>
-                </div>
-
-                <div class="gallery-card" onclick="openModal('2025', '結婚式の準備期間。前撮りでは少し緊張しましたが、カメラマンさんのおかげで笑顔になれました。', 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=600')">
-                    <div class="g-img-box"><img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
-                    <div class="g-caption">
-                        <span class="g-year">2025</span>
-                        <div class="g-text">結婚式の準備期間。<br>前撮りも良い思い出です。</div>
-                    </div>
-                </div>
+        <div class="journey-slider content-hidden">
+            <div class="g-card" onclick="openModal('2021', '出会った頃の写真。近場の公園でおしゃべりするのが一番の楽しみでした。', 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=600')">
+                <div class="g-img-box"><img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                <span class="g-year">2021</span><div class="g-text">出会った頃の写真。<br>公園デートが定番でした。</div>
+            </div>
+            <div class="g-card" onclick="openModal('2022', '初めての遠出旅行は京都へ。紅葉がとても綺麗で、二人で感動したのを覚えています。', 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=600')">
+                <div class="g-img-box"><img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                <span class="g-year">2022</span><div class="g-text">初めての旅行は京都へ。<br>紅葉に感動しました。</div>
+            </div>
+            <div class="g-card" onclick="openModal('2023', '二人の共通の趣味になったカフェ巡り。週末は美味しいコーヒーを求めて色々な街へ行きました。', 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=600')">
+                <div class="g-img-box"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                <span class="g-year">2023</span><div class="g-text">週末のカフェ巡り。<br>お気に入りの時間。</div>
+            </div>
+            <div class="g-card" onclick="openModal('2024', '記念日のプロポーズ。一生忘れられない、最高の瞬間になりました。', 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=600')">
+                <div class="g-img-box"><img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                <span class="g-year">2024</span><div class="g-text">プロポーズ。<br>一生忘れられない日に。</div>
+            </div>
+            <div class="g-card" onclick="openModal('2025', '結婚式の準備期間。前撮りでは少し緊張しましたが、カメラマンさんのおかげで笑顔になれました。', 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=600')">
+                <div class="g-img-box"><img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=400" class="g-img"></div>
+                <span class="g-year">2025</span><div class="g-text">結婚式の準備期間。<br>前撮りも良い思い出です。</div>
             </div>
         </div>
     </section>
 
     <footer>
         <p>Thank you for coming today.</p>
-        <p style="margin-top:10px; font-weight: 600; color: var(--accent-gold);">YUICHI & YUMA</p>
+        <p style="margin-top:10px; font-family: var(--font-en); font-size:1.2rem; color: var(--accent-gold);">YUICHI & YUMA</p>
     </footer>
 
     <div id="modal" onclick="closeModal()">
         <div class="close-btn">&times;</div>
         <img src="" id="m-img" class="modal-img">
         <div class="modal-content">
-            <h3 id="m-year" style="color:var(--accent-gold); font-family:var(--font-en); font-size: 1.5rem;"></h3>
-            <p id="m-text" style="margin-top:10px; font-family:var(--font-jp); line-height: 1.8;"></p>
+            <h3 id="m-year" style="color:var(--accent-gold); font-family:var(--font-script); font-size: 3rem; line-height: 1;"></h3>
+            <p id="m-text" style="margin-top:10px; font-family:var(--font-jp); line-height: 1.8; font-size:0.95rem;"></p>
         </div>
     </div>
 
@@ -561,29 +481,20 @@
         // --- 1. 桜アニメーション ---
         function createSakura() {
             const container = document.getElementById('sakura-container');
-            const numPetals = 50;
-            for (let i = 0; i < numPetals; i++) {
+            for (let i = 0; i < 40; i++) {
                 const petal = document.createElement('div');
                 petal.classList.add('sakura-petal');
                 container.appendChild(petal);
                 const startX = Math.random() * window.innerWidth;
                 const startY = Math.random() * window.innerHeight;
-                const scale = Math.random() * 0.4 + 0.4;
-                const opacity = Math.random() * 0.3 + 0.4;
-                gsap.set(petal, { x: startX, y: startY, scale: scale, opacity: opacity, rotation: Math.random() * 360 });
-                const speed = Math.random() * 20 + 30;
-                const remainingDistance = window.innerHeight + 100 - startY;
-                const fullDistance = window.innerHeight + 150;
-                const firstDuration = (remainingDistance / fullDistance) * speed;
+                gsap.set(petal, { x: startX, y: startY, scale: Math.random() * 0.4 + 0.4, opacity: Math.random() * 0.3 + 0.3, rotation: Math.random() * 360 });
+                const speed = Math.random() * 15 + 25;
                 gsap.to(petal, {
-                    y: window.innerHeight + 100, x: startX + (Math.random() - 0.5) * 200, rotation: "+=180",
-                    duration: firstDuration, ease: "none",
+                    y: window.innerHeight + 100, x: startX + (Math.random() - 0.5) * 150, rotation: "+=180",
+                    duration: (window.innerHeight - startY) / window.innerHeight * speed, ease: "none",
                     onComplete: () => {
                         gsap.set(petal, { y: -50, x: Math.random() * window.innerWidth });
-                        gsap.to(petal, {
-                            y: window.innerHeight + 100, x: "+=" + ((Math.random() - 0.5) * 200), rotation: "+=360",
-                            duration: speed, ease: "none", repeat: -1, delay: Math.random() * 5
-                        });
+                        gsap.to(petal, { y: window.innerHeight + 100, x: "+=" + ((Math.random() - 0.5) * 150), rotation: "+=360", duration: speed, ease: "none", repeat: -1, delay: Math.random() * 5 });
                     }
                 });
             }
@@ -597,105 +508,89 @@
             gsap.fromTo(".anim-item", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 2.0, ease: "power2.out", delay: 4.0, stagger: 0.5 });
         });
 
-        // ===============================================
-        //  【重要】スクロールアニメーション (Sequence)
-        // ===============================================
-        const sections = document.querySelectorAll(".scroll-section");
+        // --- 3. BGM Control ---
+        const audio = document.getElementById('bgm-audio');
+        const bgmBtn = document.getElementById('bgm-toggle');
+        function toggleBGM() {
+            if (audio.paused) {
+                audio.play();
+                bgmBtn.classList.add('playing');
+                bgmBtn.innerHTML = '<i class="fa-solid fa-compact-disc"></i>'; // レコードアイコンに変更
+            } else {
+                audio.pause();
+                bgmBtn.classList.remove('playing');
+                bgmBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
+            }
+        }
 
+        // --- 4. History Switch (Groom / Bride) ---
+        function switchHistory(target) {
+            const btns = document.querySelectorAll('.toggle-btn');
+            btns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if(target === 'groom') {
+                document.getElementById('section-bride').style.display = 'none';
+                document.getElementById('section-groom').style.display = 'block';
+            } else {
+                document.getElementById('section-groom').style.display = 'none';
+                document.getElementById('section-bride').style.display = 'block';
+            }
+        }
+
+        // --- 5. Scroll Animations ---
+        const sections = document.querySelectorAll(".scroll-section");
         sections.forEach((section) => {
             const title = section.querySelector("h2");
             const contents = section.querySelectorAll(".content-hidden");
 
             if (title) {
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top 80%", // 少し早めに発火するように調整
-                        toggleActions: "play none none reverse"
-                    }
-                });
+                const tl = gsap.timeline({ scrollTrigger: { trigger: section, start: "top 80%", toggleActions: "play none none reverse" } });
+                tl.fromTo(title, { autoAlpha: 0, scale: 0.8, y: 20 }, { autoAlpha: 1, scale: 1, y: 0, duration: 1.0, ease: "back.out(1.7)" });
 
-                // 1. タイトルアニメーション (ズームイン)
-                tl.fromTo(title, 
-                    { autoAlpha: 0, scale: 0.5, filter: "blur(4px)" },
-                    { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 1.0, ease: "power3.out" }
-                );
-
-                // --- Q&Aセクションの場合：会話のリズムを作る ---
+                // Q&Aリズム
                 if (section.classList.contains("qa-section-wrapper")) {
                     const items = section.querySelectorAll(".qa-item");
                     items.forEach((item) => {
                         const q = item.querySelector(".qa-anim-q");
                         const a = item.querySelector(".qa-anim-a");
-
-                        tl.fromTo(q, 
-                            { autoAlpha: 0, y: 20 },
-                            { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" },
-                            "-=0.2"
-                        );
-                        tl.fromTo(a, 
-                            { autoAlpha: 0, y: 15 },
-                            { autoAlpha: 1, y: 0, duration: 1.0, ease: "power2.out" },
-                            "+=0.4" 
-                        );
+                        tl.fromTo(q, { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.2");
+                        tl.fromTo(a, { autoAlpha: 0, y: 15 }, { autoAlpha: 1, y: 0, duration: 1.0, ease: "power2.out" }, "+=0.3");
                     });
-
-                    if(contents.length > 0) {
-                         tl.fromTo(contents, 
-                            { autoAlpha: 0, y: 20 },
-                            { autoAlpha: 1, y: 0, duration: 1.0 },
-                            "-=0.5"
-                        );
-                    }
-                } else {
-                    // --- 通常セクションの場合 ---
-                    if (contents.length > 0) {
-                        tl.fromTo(contents, 
-                            { autoAlpha: 0, y: 20 },
-                            { 
-                                autoAlpha: 1, y: 0, 
-                                duration: 1.5, 
-                                ease: "power2.out",
-                                stagger: 0.2 
-                            },
-                            "-=0.2" 
-                        );
-                    }
+                } else if (contents.length > 0) {
+                    tl.fromTo(contents, { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 1.2, ease: "power2.out", stagger: 0.2 }, "-=0.4");
                 }
             }
         });
 
-        // C. タイムラインの線
-        gsap.to(".timeline-line", {
+        // Time Table Line & Nodes Animation
+        gsap.to("#tt-active-line", {
             height: "100%", ease: "none",
-            scrollTrigger: {
-                trigger: ".timeline-container",
-                start: "top 75%",
-                end: "bottom 75%",
-                scrub: 1
-            }
+            scrollTrigger: { trigger: ".tt-wrapper", start: "top 60%", end: "bottom 60%", scrub: 0.5 }
+        });
+        
+        const ttRows = document.querySelectorAll('.tt-trigger');
+        ttRows.forEach(row => {
+            const node = row.querySelector('.tt-node');
+            ScrollTrigger.create({
+                trigger: row,
+                start: "top 60%", // 線が到達したタイミングで発火
+                onEnter: () => node.classList.add('active'),
+                onLeaveBack: () => node.classList.remove('active')
+            });
         });
 
-        // --- 4. Gallery ---
-        const marquee = document.getElementById('marquee');
-        const clone = marquee.innerHTML;
-        marquee.innerHTML += clone + clone;
-        const marqueeAnim = gsap.to("#marquee", { xPercent: -50, ease: "none", duration: 35, repeat: -1 });
-        
+        // --- 6. Modal ---
         const modal = document.getElementById('modal');
         const mImg = document.getElementById('m-img');
         const mYear = document.getElementById('m-year');
         const mText = document.getElementById('m-text');
         
-        function openModal(year, text, src) {
-            marqueeAnim.pause();
-            mYear.innerText = year; mText.innerText = text; mImg.src = src;
+        function openModal(title, text, src) {
+            mYear.innerText = title; mText.innerText = text; mImg.src = src;
             modal.classList.add('active');
         }
-        function closeModal() { 
-            modal.classList.remove('active'); 
-            marqueeAnim.play(); 
-        }
+        function closeModal() { modal.classList.remove('active'); }
     </script>
 </body>
 </html>
