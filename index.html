@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    
     <title>Wedding Profile | YUICHI & YUMA</title>
+
+    <meta property="og:title" content="Wedding Profile | YUICHI & YUMA">
+    <meta property="og:description" content="2026.06.20 私たちの結婚式のプロフィールサイトです">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://i.ibb.co/HLSjWFyW/2025-1220-11033800-1.jpg">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Great+Vibes&family=Shippori+Mincho:wght@400;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -68,6 +74,7 @@
             width: 12px; height: 18px;
             border-radius: 15px 0px 15px 0px;
             opacity: 0.7;
+            will-change: transform; /* スマホ描画パフォーマンス向上 */
         }
 
         /* --- タイトル & コンテンツ (初期状態) --- */
@@ -105,6 +112,8 @@
         .hero {
             height: 100vh; position: relative; overflow: hidden;
             display: flex; justify-content: center; align-items: center;
+            /* スマホのURLバーを考慮した高さ調整 */
+            height: 100svh; 
         }
         .hero-slide {
             position: absolute; inset: 0;
@@ -123,18 +132,10 @@
             100% { opacity: 0; }
         }
 
-        .hero-overlay {
-            position: absolute; inset: 0; background: rgba(255,255,255,0.4); z-index: 1;
-        }
-        .hero-content {
-            position: relative; z-index: 2; text-align: center;
-            padding: 0 20px;
-            width: 100%;
-        }
+        .hero-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.4); z-index: 1; }
+        .hero-content { position: relative; z-index: 2; text-align: center; padding: 0 20px; width: 100%; }
         
-        .hero-title-svg {
-            width: 100%; height: 100px; display: block; margin: 10px auto; overflow: visible;
-        }
+        .hero-title-svg { width: 100%; height: 100px; display: block; margin: 10px auto; overflow: visible; }
         .hero-title-text {
             font-family: var(--font-script); font-size: 3.8rem; text-anchor: middle; dominant-baseline: middle;
             fill: rgba(68, 68, 68, 0); stroke: #444; stroke-width: 1px; stroke-dasharray: 2000; stroke-dashoffset: 2000;
@@ -166,45 +167,34 @@
             display: flex; flex-direction: column; align-items: center; text-align: center;
         }
         .t-icon {
-            font-size: 2.5rem; color: var(--accent-gold); background: var(--bg-color);
-            padding: 10px; margin-bottom: 15px;
+            font-size: 2.2rem; color: var(--accent-gold); background: var(--bg-color);
+            padding: 10px; margin-bottom: 10px;
         }
         .t-time { font-family: var(--font-en); font-size: 1.2rem; font-weight: bold; color: var(--text-gray); }
         .t-title { font-family: var(--font-jp); font-size: 1.1rem; font-weight: 500; margin: 5px 0; }
         .atmosphere-img {
             width: 150px; height: 150px; object-fit: cover; border-radius: 50%;
-            margin: 20px auto; border: 1px solid #eee; padding: 5px; background: #fff;
+            margin: 15px auto; border: 1px solid #eee; padding: 5px; background: #fff;
         }
-/* --- Menu --- */
+
+        /* --- Menu --- */
         .menu-container {
-            max-width: 500px;
-            margin: 0 auto;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 50px 30px;
-            border-radius: 4px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            max-width: 500px; margin: 0 auto; text-align: center;
+            background: rgba(255, 255, 255, 0.7); padding: 50px 20px;
+            border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);
             border: 1px solid rgba(197, 160, 89, 0.2);
         }
-        .menu-item {
-            margin-bottom: 30px;
-        }
-        .menu-item:last-child {
-            margin-bottom: 0;
-        }
+        .menu-item { margin-bottom: 30px; }
+        .menu-item:last-child { margin-bottom: 0; }
         .menu-title {
-            font-family: var(--font-en);
-            color: var(--accent-gold);
-            font-size: 1.3rem;
-            letter-spacing: 0.1em;
-            margin-bottom: 8px;
+            font-family: var(--font-en); color: var(--accent-gold);
+            font-size: 1.3rem; letter-spacing: 0.1em; margin-bottom: 8px;
         }
         .menu-desc {
-            font-family: var(--font-jp);
-            font-size: 0.95rem;
-            color: var(--text-main);
-            line-height: 1.6;
+            font-family: var(--font-jp); font-size: 0.95rem;
+            color: var(--text-main); line-height: 1.6;
         }
+
         /* =========================================
            PART 2: Profile ~ End
            ========================================= */
@@ -213,18 +203,14 @@
         .profile-container { display: flex; flex-direction: column; gap: 60px; max-width: 800px; margin: 0 auto; }
         .profile-card { text-align: center; }
         
-        .p-content-wrap {
-            display: flex; flex-direction: column; align-items: center;
-            margin-bottom: 20px;
-        }
+        .p-content-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
         .p-label {
             font-family: var(--font-en); font-size: 1.3rem; color: var(--accent-gold);
             letter-spacing: 0.1em; margin-bottom: 15px; font-weight: 600;
         }
         .p-photo { 
-            width: 200px; height: 200px; object-fit: cover; border-radius: 50%;
-            border: 1px solid #eee; padding: 5px; background: #fff;
-            margin-bottom: 15px;
+            width: 180px; height: 180px; object-fit: cover; border-radius: 50%;
+            border: 1px solid #eee; padding: 5px; background: #fff; margin-bottom: 15px;
         }
         .p-name {
             font-family: var(--font-en); font-size: 1.5rem; letter-spacing: 0.1em;
@@ -232,91 +218,69 @@
         }
 
         .p-table {
-            width: 100%; max-width: 400px; margin: 10px auto 0;
+            width: 100%; max-width: 340px; margin: 10px auto 0;
             font-size: 0.9rem; text-align: left; border-collapse: collapse;
         }
         .p-table th { color: #999; font-weight: normal; padding: 8px 0; width: 30%; border-bottom: 1px solid #eee; }
         .p-table td { padding: 8px 0; border-bottom: 1px solid #eee; }
 
-        /* --- Q&A (Revised) --- */
-        .qa-section { padding: 20px 0; margin-top: 20px; }
+        /* --- Q&A --- */
+        .qa-section { padding: 20px 0; margin-top: 10px; }
+        .qa-item { margin-bottom: 60px; text-align: center; }
         
-        .qa-item { 
-            margin-bottom: 70px; /* Qごとの間隔を広めに */
-            text-align: center; 
-        }
-        
-        /* 質問 */
         .qa-q {
             font-family: var(--font-en); color: var(--accent-gold); font-size: 1.15rem;
-            display: inline-block; margin-bottom: 30px; /* QとAの間隔（視覚的な間） */
-            letter-spacing: 0.05em;
-            position: relative;
+            display: inline-block; margin-bottom: 30px; letter-spacing: 0.05em; position: relative;
         }
         .qa-q::after {
             content: ''; display: block; width: 30px; height: 1px; background: var(--accent-gold);
             margin: 8px auto 0;
         }
 
-        /* 回答エリア */
         .qa-a-box { 
-            background: transparent; padding: 0 10px;
-            max-width: 600px; margin: 0 auto;
-            text-align: left; /* 読みやすくするため左寄せベース */
+            background: transparent; padding: 0 10px; max-width: 600px; margin: 0 auto; text-align: left; 
         }
-        
-        .qa-row {
-            margin-bottom: 25px; /* YuichiとYumaの間隔 */
-        }
+        .qa-row { margin-bottom: 25px; }
 
         .qa-name { 
-            font-size: 0.8rem; color: #bbb; 
-            font-family: var(--font-en); letter-spacing: 0.1em;
+            font-size: 0.8rem; color: #bbb; font-family: var(--font-en); letter-spacing: 0.1em;
             margin-right: 8px; display: inline-block;
         }
-        .qa-text { 
-            font-size: 0.95rem; line-height: 1.8; color: #444; 
-            display: inline;
-        }
+        .qa-text { font-size: 0.95rem; line-height: 1.8; color: #444; display: inline; }
 
-        /* アニメーション用クラス（JSで制御） */
-        .qa-anim-q, .qa-anim-a {
-            opacity: 0;
-            transform: translateY(20px);
-            visibility: hidden;
-        }
+        .qa-anim-q, .qa-anim-a { opacity: 0; transform: translateY(20px); visibility: hidden; }
 
-        .qa-images-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 40px; }
+        .qa-images-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
         .qa-grid-img { border-radius: 4px; height: 160px; object-fit: cover; width: 100%; filter: sepia(10%); }
 
         /* --- Gallery --- */
-        .gallery-wrap { width: 100%; overflow: hidden; padding: 40px 0; background: transparent; }
+        .gallery-wrap { width: 100%; overflow: hidden; padding: 30px 0; background: transparent; }
         .marquee-wrapper { display: flex; width: fit-content; }
         
-        .gallery-card { width: 260px; margin-right: 25px; flex-shrink: 0; cursor: pointer; }
+        .gallery-card { width: 240px; margin-right: 20px; flex-shrink: 0; cursor: pointer; }
         .g-img-box {
             width: 100%; height: 180px; overflow: hidden; border-radius: 4px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 12px;
         }
         .g-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-        .gallery-card:hover .g-img { transform: scale(1.1); }
+        .gallery-card:hover .g-img { transform: scale(1.05); }
         
         .g-caption { text-align: left; padding: 0 5px; }
         .g-year { font-family: var(--font-en); color: var(--accent-gold); font-size: 1.1rem; display: block; }
         .g-text { font-size: 0.85rem; color: #666; line-height: 1.5; }
 
         /* --- Footer & Modal --- */
-        footer { text-align:center; padding:80px 20px 50px; color:#aaa; font-size:0.8rem; background:transparent; font-family:var(--font-en); }
+        footer { text-align:center; padding:60px 20px 50px; color:#aaa; font-size:0.8rem; background:transparent; font-family:var(--font-en); }
 
         #modal {
-            position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 9999;
+            position: fixed; inset: 0; background: rgba(255,255,255,0.97); z-index: 9999;
             display: none; flex-direction: column; justify-content: center; align-items: center;
             opacity: 0; transition: opacity 0.3s; padding: 20px;
         }
         #modal.active { display: flex; opacity: 1; }
-        .modal-img { max-width: 100%; max-height: 50vh; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .modal-img { max-width: 100%; max-height: 60vh; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .modal-content { max-width: 500px; text-align: center; margin-top: 20px; }
-        .close-btn { position: absolute; top: 30px; right: 30px; font-size: 2rem; color: #333; cursor: pointer; }
+        .close-btn { position: absolute; top: 20px; right: 25px; font-size: 2.5rem; color: #333; cursor: pointer; }
 
     </style>
 </head>
@@ -396,7 +360,8 @@
             </div>
         </div>
     </section>
-<section class="scroll-section">
+
+    <section class="scroll-section">
         <h2>Menu<span class="jp-sub">お食事</span></h2>
         
         <div class="menu-container content-hidden">
@@ -437,6 +402,7 @@
             </div>
         </div>
     </section>
+
     <section class="scroll-section">
         <h2>Profile<span class="jp-sub">二人について</span></h2>
         
@@ -577,15 +543,15 @@
 
     <footer>
         <p>Thank you for coming today.</p>
-        <p style="margin-top:10px;">YUICHI & YUMA</p>
+        <p style="margin-top:10px; font-weight: 600; color: var(--accent-gold);">YUICHI & YUMA</p>
     </footer>
 
     <div id="modal" onclick="closeModal()">
         <div class="close-btn">&times;</div>
         <img src="" id="m-img" class="modal-img">
         <div class="modal-content">
-            <h3 id="m-year" style="color:var(--accent-gold); font-family:var(--font-en);"></h3>
-            <p id="m-text" style="margin-top:10px; font-family:var(--font-jp);"></p>
+            <h3 id="m-year" style="color:var(--accent-gold); font-family:var(--font-en); font-size: 1.5rem;"></h3>
+            <p id="m-text" style="margin-top:10px; font-family:var(--font-jp); line-height: 1.8;"></p>
         </div>
     </div>
 
@@ -634,23 +600,17 @@
         // ===============================================
         //  【重要】スクロールアニメーション (Sequence)
         // ===============================================
-
         const sections = document.querySelectorAll(".scroll-section");
 
         sections.forEach((section) => {
             const title = section.querySelector("h2");
-            // 一般的なコンテンツ
             const contents = section.querySelectorAll(".content-hidden");
-            
-            // Q&A用の個別アニメーション要素
-            const qaQs = section.querySelectorAll(".qa-anim-q");
-            const qaAs = section.querySelectorAll(".qa-anim-a");
 
             if (title) {
                 const tl = gsap.timeline({
                     scrollTrigger: {
                         trigger: section,
-                        start: "top 75%",
+                        start: "top 80%", // 少し早めに発火するように調整
                         toggleActions: "play none none reverse"
                     }
                 });
@@ -663,21 +623,16 @@
 
                 // --- Q&Aセクションの場合：会話のリズムを作る ---
                 if (section.classList.contains("qa-section-wrapper")) {
-                    // Q1 -> (待機) -> A1 -> (待機) -> Q2 -> ... の順で表示
-                    
-                    // すべてのQとAをペアにしてループ処理
                     const items = section.querySelectorAll(".qa-item");
                     items.forEach((item) => {
                         const q = item.querySelector(".qa-anim-q");
                         const a = item.querySelector(".qa-anim-a");
 
-                        // Qを表示
                         tl.fromTo(q, 
                             { autoAlpha: 0, y: 20 },
                             { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" },
                             "-=0.2"
                         );
-                        // 間を開けて Aを表示 (0.4秒の溜め)
                         tl.fromTo(a, 
                             { autoAlpha: 0, y: 15 },
                             { autoAlpha: 1, y: 0, duration: 1.0, ease: "power2.out" },
@@ -685,7 +640,6 @@
                         );
                     });
 
-                    // 最後に画像を出す
                     if(contents.length > 0) {
                          tl.fromTo(contents, 
                             { autoAlpha: 0, y: 20 },
@@ -693,7 +647,6 @@
                             "-=0.5"
                         );
                     }
-
                 } else {
                     // --- 通常セクションの場合 ---
                     if (contents.length > 0) {
@@ -728,16 +681,21 @@
         const clone = marquee.innerHTML;
         marquee.innerHTML += clone + clone;
         const marqueeAnim = gsap.to("#marquee", { xPercent: -50, ease: "none", duration: 35, repeat: -1 });
+        
         const modal = document.getElementById('modal');
         const mImg = document.getElementById('m-img');
         const mYear = document.getElementById('m-year');
         const mText = document.getElementById('m-text');
+        
         function openModal(year, text, src) {
             marqueeAnim.pause();
             mYear.innerText = year; mText.innerText = text; mImg.src = src;
             modal.classList.add('active');
         }
-        function closeModal() { modal.classList.remove('active'); marqueeAnim.play(); }
+        function closeModal() { 
+            modal.classList.remove('active'); 
+            marqueeAnim.play(); 
+        }
     </script>
 </body>
 </html>
