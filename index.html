@@ -485,16 +485,25 @@
         const audio = document.getElementById('bgm-audio');
         const bgmBtn = document.getElementById('bgm-toggle');
         function toggleBGM() {
-            if (audio.paused) {
-                audio.play();
-                bgmBtn.classList.add('playing');
-                bgmBtn.innerHTML = '<i class="fa-solid fa-compact-disc"></i>';
-            } else {
-                audio.pause();
-                bgmBtn.classList.remove('playing');
-                bgmBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
-            }
-        }
+    const audio = document.getElementById('bgm-audio');
+    const bgmBtn = document.getElementById('bgm-toggle');
+    
+    if (audio.paused) {
+        // 再生前に一度ロードを強制する（これで解決することが多いです）
+        audio.load(); 
+        audio.play().then(() => {
+            bgmBtn.classList.add('playing');
+            bgmBtn.innerHTML = '<i class="fa-solid fa-compact-disc"></i>';
+        }).catch(e => {
+            console.log("再生エラー:", e);
+            alert("スマホの消音モードを解除して再度お試しください");
+        });
+    } else {
+        audio.pause();
+        bgmBtn.classList.remove('playing');
+        bgmBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
+    }
+}
 
         // --- 4. ハイブリッド・オートスクロール（自動＋スワイプ） ---
         let isModalOpen = false; // モーダル開閉状態のフラグ
